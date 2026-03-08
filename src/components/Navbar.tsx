@@ -147,11 +147,10 @@ const Navbar = () => {
                 <Link
                   to="/espace-patient"
                   onClick={() => setMobileOpen(false)}
-                  className={`block text-sm font-medium py-2 ${
-                    isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
-                  }`}
+                  className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
                 >
-                  Mon espace
+                  <LayoutDashboard className="h-4 w-4" />
+                  Espace Patient
                 </Link>
               )}
               <button
