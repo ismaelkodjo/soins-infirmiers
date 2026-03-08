@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Heart, Menu, X, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
