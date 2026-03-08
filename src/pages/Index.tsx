@@ -61,12 +61,6 @@ const Index = () => {
               >
                 Prendre rendez-vous
               </Link>
-              <Link
-                to="/blog"
-                className="border-2 border-primary-foreground/40 text-primary-foreground px-8 py-3.5 rounded-lg font-semibold text-base hover:bg-primary-foreground/10 transition-colors"
-              >
-                Lire le blog
-              </Link>
             </div>
           </div>
         </div>
