@@ -53,15 +53,17 @@ const Navbar = () => {
                   Admin
                 </Link>
               )}
-              <Link
-                to="/espace-patient"
-                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-                  isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                Mon espace
-              </Link>
+              {!isAdmin && (
+                <Link
+                  to="/espace-patient"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                    isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  Mon espace
+                </Link>
+              )}
               <button
                 onClick={signOut}
                 className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
@@ -120,15 +122,17 @@ const Navbar = () => {
                   Admin
                 </Link>
               )}
-              <Link
-                to="/espace-patient"
-                onClick={() => setMobileOpen(false)}
-                className={`block text-sm font-medium py-2 ${
-                  isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                Mon espace
-              </Link>
+              {!isAdmin && (
+                <Link
+                  to="/espace-patient"
+                  onClick={() => setMobileOpen(false)}
+                  className={`block text-sm font-medium py-2 ${
+                    isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  Mon espace
+                </Link>
+              )}
               <button
                 onClick={() => { signOut(); setMobileOpen(false); }}
                 className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
