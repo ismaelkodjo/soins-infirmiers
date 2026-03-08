@@ -14,6 +14,7 @@ import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import PatientDashboard from "./pages/PatientDashboard";
 import ArticleDetail from "./pages/ArticleDetail";
+import Shop from "./pages/Shop";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/boutique" element={<Shop />} />
             <Route path="/blog/:slug" element={<ArticleDetail />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/auth" element={<Auth />} />
