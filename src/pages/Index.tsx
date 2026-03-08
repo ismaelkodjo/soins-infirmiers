@@ -108,15 +108,6 @@ const Index = () => {
               </Link>
             ))}
           </div>
-          <div className="mt-10 text-center">
-            <Link
-              to="/blog"
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity"
-            >
-              Lire le blog
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
         </div>
       </section>
 
