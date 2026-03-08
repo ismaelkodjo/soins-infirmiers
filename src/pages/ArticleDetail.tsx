@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, ArrowLeft, ArrowRight } from "lucide-react";
 import { articles } from "@/data/articles";
+import CommentSection from "@/components/CommentSection";
 
 const ArticleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
