@@ -89,7 +89,7 @@ const Index = () => {
                 <article className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 flex flex-col h-full">
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
-                      src={article.image}
+                      src={article.image_url}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
