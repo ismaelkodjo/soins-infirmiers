@@ -117,45 +117,33 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          {user ? (
-            <>
-              {isAdmin && (
-                <Link
-                  to="/admin"
-                  onClick={() => setMobileOpen(false)}
-                  className={`flex items-center gap-2 text-sm font-medium py-2 ${
-                    location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
-                  }`}
-                >
-                  <ShieldCheck className="h-4 w-4" />
-                  Admin
-                </Link>
-              )}
-              {!isAdmin && (
-                <Link
-                  to="/espace-patient"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Espace Patient
-                </Link>
-              )}
-              <button
-                onClick={() => { signOut(); setMobileOpen(false); }}
-                className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
-              >
-                Déconnexion
-              </button>
-            </>
-          ) : (
+          {user && isAdmin && (
             <Link
-              to="/auth"
+              to="/admin"
               onClick={() => setMobileOpen(false)}
-              className="block bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold text-center"
+              className={`flex items-center gap-2 text-sm font-medium py-2 ${
+                location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+              }`}
             >
-              Connexion
+              <ShieldCheck className="h-4 w-4" />
+              Admin
             </Link>
+          )}
+          <Link
+            to="/espace-patient"
+            onClick={() => setMobileOpen(false)}
+            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Espace Patient
+          </Link>
+          {user && (
+            <button
+              onClick={() => { signOut(); setMobileOpen(false); }}
+              className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
+            >
+              Déconnexion
+            </button>
           )}
         </div>
       )}
