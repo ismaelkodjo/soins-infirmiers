@@ -26,6 +26,7 @@ import AdminArticles from "./pages/admin/AdminArticles";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
+import AdminPatients from "./pages/admin/AdminPatients";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
