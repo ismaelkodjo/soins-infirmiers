@@ -1,12 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard, ShoppingBag } from "lucide-react";
+import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { isAdmin } = useAdminCheck();
 
   const links = [
     { to: "/", label: "Accueil" },
@@ -40,6 +42,17 @@ const Navbar = () => {
           ))}
           {user ? (
             <>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                    location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin
+                </Link>
+              )}
               <Link
                 to="/espace-patient"
                 className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
@@ -95,6 +108,18 @@ const Navbar = () => {
           ))}
           {user ? (
             <>
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className={`flex items-center gap-2 text-sm font-medium py-2 ${
+                    location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+                  }`}
+                >
+                  <ShieldCheck className="h-4 w-4" />
+                  Admin
+                </Link>
+              )}
               <Link
                 to="/espace-patient"
                 onClick={() => setMobileOpen(false)}
