@@ -66,6 +66,9 @@ const ArticleDetail = () => {
               ))}
             </div>
 
+            {/* Comments */}
+            <CommentSection articleSlug={article.slug} />
+
             {/* Navigation between articles */}
             <div className="border-t border-border mt-12 pt-8 grid sm:grid-cols-2 gap-4">
               {prevArticle ? (
