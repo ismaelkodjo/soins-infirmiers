@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Stethoscope, Home, Syringe, HeartPulse, Clock, Shield, Users, Calendar, ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-nurse.jpg";
-import { articles } from "@/data/articles";
+import { useArticles } from "@/hooks/useArticles";
 
 const services = [
   {
@@ -33,6 +33,8 @@ const values = [
 ];
 
 const Index = () => {
+  const { data: articles = [] } = useArticles();
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -87,7 +89,7 @@ const Index = () => {
                 <article className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 flex flex-col h-full">
                   <div className="aspect-[4/3] overflow-hidden">
                     <img
-                      src={article.image}
+                      src={article.image_url}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
