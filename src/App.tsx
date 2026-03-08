@@ -26,6 +26,7 @@ import AdminArticles from "./pages/admin/AdminArticles";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
+import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +68,7 @@ const AppShell = () => {
         <Route path="/espace-patient/documents" element={<ProtectedRoute><PatientDocuments /></ProtectedRoute>} />
         <Route path="/espace-patient/suivi" element={<ProtectedRoute><PatientHealth /></ProtectedRoute>} />
         <Route path="/espace-patient/profil" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} />
+        <Route path="/page/:slug" element={<DynamicPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

@@ -3,6 +3,18 @@ import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard, ShieldCheck } from "luc
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+const staticLinks = [
+  { to: "/", label: "Accueil" },
+  { to: "/blog", label: "Blog" },
+  { to: "/boutique", label: "Boutique" },
+  { to: "/contact", label: "Contact" },
+];
+
+// Slugs already handled by static routes
+const staticSlugs = ["accueil", "blog", "boutique", "contact", "auth", "reset-password", "espace-patient"];
 
 const Navbar = () => {
   const location = useLocation();
@@ -10,11 +22,22 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
 
+  const { data: dynamicPages } = useQuery({
+    queryKey: ["navbar-pages"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("pages")
+        .select("title, slug")
+        .eq("published", true)
+        .order("created_at", { ascending: true });
+      return (data || []).filter((p) => !staticSlugs.includes(p.slug));
+    },
+    staleTime: 60_000,
+  });
+
   const links = [
-    { to: "/", label: "Accueil" },
-    { to: "/blog", label: "Blog" },
-    { to: "/boutique", label: "Boutique" },
-    { to: "/contact", label: "Contact" },
+    ...staticLinks,
+    ...(dynamicPages || []).map((p) => ({ to: `/page/${p.slug}`, label: p.title })),
   ];
 
   const isActive = (path: string) => location.pathname === path;
