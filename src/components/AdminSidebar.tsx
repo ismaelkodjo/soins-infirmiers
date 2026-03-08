@@ -17,6 +17,7 @@ const items = [
   { title: "Tableau de bord", url: "/admin", icon: LayoutDashboard },
   { title: "Articles", url: "/admin/articles", icon: FileText },
   { title: "Produits", url: "/admin/produits", icon: ShoppingBag },
+  { title: "Pages", url: "/admin/pages", icon: FilePlus2 },
   { title: "Messages", url: "/admin/messages", icon: MessageSquare },
 ];
 
