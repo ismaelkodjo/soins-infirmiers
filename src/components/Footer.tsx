@@ -26,9 +26,9 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm opacity-70">
-              <li>📞 01 23 45 67 89</li>
-              <li>📧 contact@infirmier-sante.fr</li>
-              <li>📍 Paris, France</li>
+              <li>📞 +22890140074</li>
+              <li>📧 sakpanikodjo@gmail.com</li>
+              <li>📍 Dapaong, Togo</li>
             </ul>
           </div>
         </div>
