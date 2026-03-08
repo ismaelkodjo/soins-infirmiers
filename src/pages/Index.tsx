@@ -33,6 +33,8 @@ const values = [
 ];
 
 const Index = () => {
+  const { data: articles = [] } = useArticles();
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
