@@ -83,37 +83,33 @@ const Index = () => {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {articles.slice(0, 4).map((article) => (
-              <article
-                key={article.title}
-                className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 group flex flex-col"
-              >
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-5 flex flex-col flex-1">
-                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                    {article.category}
-                  </span>
-                  <h3 className="font-display text-base font-semibold text-card-foreground mt-1.5 mb-2 leading-snug line-clamp-2">
-                    {article.title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-muted-foreground text-xs mb-4">
-                    <Calendar className="h-3.5 w-3.5" />
-                    {article.date}
+              <Link to={`/blog/${article.slug}`} key={article.slug} className="group">
+                <article className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 flex flex-col h-full">
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img
+                      src={article.image}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                  <Link
-                    to="/blog"
-                    className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline"
-                  >
-                    Lire la suite
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                </div>
-              </article>
+                  <div className="p-5 flex flex-col flex-1">
+                    <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                      {article.category}
+                    </span>
+                    <h3 className="font-display text-base font-semibold text-card-foreground mt-1.5 mb-2 leading-snug line-clamp-2">
+                      {article.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-muted-foreground text-xs mb-4">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {article.date}
+                    </div>
+                    <span className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary group-hover:underline">
+                      Lire la suite
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </span>
+                  </div>
+                </article>
+              </Link>
             ))}
           </div>
           <div className="mt-10 text-center">
