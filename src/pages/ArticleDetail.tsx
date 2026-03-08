@@ -1,12 +1,26 @@
 import { useParams, Link } from "react-router-dom";
-import { Calendar, ArrowLeft, ArrowRight } from "lucide-react";
-import { articles } from "@/data/articles";
+import { Calendar, ArrowLeft } from "lucide-react";
+import { useArticle } from "@/hooks/useArticles";
 import CommentSection from "@/components/CommentSection";
 
 const ArticleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const articleIndex = articles.findIndex((a) => a.slug === slug);
-  const article = articles[articleIndex];
+  const { data: article, isLoading } = useArticle(slug);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen pt-16">
+        <div className="h-[40vh] min-h-[300px] bg-muted animate-pulse" />
+        <div className="container mx-auto px-4 py-12">
+          <div className="max-w-3xl mx-auto space-y-4">
+            <div className="h-4 bg-muted rounded w-32 animate-pulse" />
+            <div className="h-5 bg-muted rounded w-full animate-pulse" />
+            <div className="h-5 bg-muted rounded w-3/4 animate-pulse" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!article) {
     return (
@@ -21,14 +35,11 @@ const ArticleDetail = () => {
     );
   }
 
-  const prevArticle = articleIndex > 0 ? articles[articleIndex - 1] : null;
-  const nextArticle = articleIndex < articles.length - 1 ? articles[articleIndex + 1] : null;
-
   return (
     <div className="min-h-screen pt-16">
       {/* Hero image */}
       <div className="relative h-[40vh] min-h-[300px]">
-        <img src={article.image} alt={article.title} className="w-full h-full object-cover" />
+        <img src={article.image_url} alt={article.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-foreground/50" />
         <div className="absolute inset-0 flex items-end">
           <div className="container mx-auto px-4 pb-10">
@@ -68,38 +79,6 @@ const ArticleDetail = () => {
 
             {/* Comments */}
             <CommentSection articleSlug={article.slug} />
-
-            {/* Navigation between articles */}
-            <div className="border-t border-border mt-12 pt-8 grid sm:grid-cols-2 gap-4">
-              {prevArticle ? (
-                <Link
-                  to={`/blog/${prevArticle.slug}`}
-                  className="bg-card rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow group"
-                >
-                  <span className="text-xs text-muted-foreground flex items-center gap-1 mb-2">
-                    <ArrowLeft className="h-3 w-3" /> Article précédent
-                  </span>
-                  <p className="font-display text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
-                    {prevArticle.title}
-                  </p>
-                </Link>
-              ) : (
-                <div />
-              )}
-              {nextArticle && (
-                <Link
-                  to={`/blog/${nextArticle.slug}`}
-                  className="bg-card rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow group text-right"
-                >
-                  <span className="text-xs text-muted-foreground flex items-center justify-end gap-1 mb-2">
-                    Article suivant <ArrowRight className="h-3 w-3" />
-                  </span>
-                  <p className="font-display text-sm font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
-                    {nextArticle.title}
-                  </p>
-                </Link>
-              )}
-            </div>
           </div>
         </div>
       </section>
