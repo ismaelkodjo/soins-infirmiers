@@ -38,13 +38,24 @@ const Navbar = () => {
             </Link>
           ))}
           {user ? (
-            <button
-              onClick={signOut}
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              Déconnexion
-            </button>
+            <>
+              <Link
+                to="/espace-patient"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                  isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                Mon espace
+              </Link>
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                <LogOut className="h-4 w-4" />
+                Déconnexion
+              </button>
+            </>
           ) : (
             <Link
               to="/auth"
