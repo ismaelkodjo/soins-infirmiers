@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { Heart, Menu, X, LogIn, LogOut, LayoutDashboard, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
