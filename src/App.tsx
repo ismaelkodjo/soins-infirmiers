@@ -26,6 +26,7 @@ import AdminArticles from "./pages/admin/AdminArticles";
 import AdminProducts from "./pages/admin/AdminProducts";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
+import AdminPatients from "./pages/admin/AdminPatients";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
@@ -47,6 +48,7 @@ const AppShell = () => {
           <Route path="produits" element={<AdminProducts />} />
           <Route path="messages" element={<AdminMessages />} />
           <Route path="pages" element={<AdminPages />} />
+          <Route path="patients" element={<AdminPatients />} />
         </Route>
       </Routes>
     );
