@@ -1,10 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, LogIn, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const links = [
     { to: "/", label: "Accueil" },
@@ -35,12 +37,23 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/contact"
-            className="bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            Prendre RDV
-          </Link>
+          {user ? (
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              Déconnexion
+            </button>
+          ) : (
+            <Link
+              to="/auth"
+              className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              <LogIn className="h-4 w-4" />
+              Connexion
+            </Link>
+          )}
         </div>
 
         {/* Mobile toggle */}
@@ -68,13 +81,22 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <Link
-            to="/contact"
-            onClick={() => setMobileOpen(false)}
-            className="block bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold text-center"
-          >
-            Prendre RDV
-          </Link>
+          {user ? (
+            <button
+              onClick={() => { signOut(); setMobileOpen(false); }}
+              className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
+            >
+              Déconnexion
+            </button>
+          ) : (
+            <Link
+              to="/auth"
+              onClick={() => setMobileOpen(false)}
+              className="block bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold text-center"
+            >
+              Connexion
+            </Link>
+          )}
         </div>
       )}
     </nav>
