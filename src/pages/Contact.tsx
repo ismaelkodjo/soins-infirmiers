@@ -1,14 +1,30 @@
 import { useState } from "react";
-import { Phone, Mail, MapPin, Send } from "lucide-react";
+import { Phone, Mail, MapPin, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Message envoyé avec succès ! Je vous recontacterai rapidement.");
-    setForm({ name: "", email: "", phone: "", message: "" });
+    setLoading(true);
+    try {
+      const { error } = await supabase.from("contact_messages").insert({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.message,
+      });
+      if (error) throw error;
+      toast.success("Message envoyé avec succès ! Je vous recontacterai rapidement.");
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      toast.error("Erreur lors de l'envoi. Veuillez réessayer.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
