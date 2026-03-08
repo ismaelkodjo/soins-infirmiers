@@ -93,12 +93,23 @@ const Navbar = () => {
             </Link>
           ))}
           {user ? (
-            <button
-              onClick={() => { signOut(); setMobileOpen(false); }}
-              className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
-            >
-              Déconnexion
-            </button>
+            <>
+              <Link
+                to="/espace-patient"
+                onClick={() => setMobileOpen(false)}
+                className={`block text-sm font-medium py-2 ${
+                  isActive("/espace-patient") ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                Mon espace
+              </Link>
+              <button
+                onClick={() => { signOut(); setMobileOpen(false); }}
+                className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
+              >
+                Déconnexion
+              </button>
+            </>
           ) : (
             <Link
               to="/auth"
