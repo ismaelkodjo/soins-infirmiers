@@ -41,11 +41,23 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/espace-patient"
-              element={
-                <ProtectedRoute>
-                  <PatientDashboard />
-                </ProtectedRoute>
-              }
+              element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/rendez-vous"
+              element={<ProtectedRoute><PatientAppointments /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/documents"
+              element={<ProtectedRoute><PatientDocuments /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/suivi"
+              element={<ProtectedRoute><PatientHealth /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/profil"
+              element={<ProtectedRoute><PatientProfile /></ProtectedRoute>}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
