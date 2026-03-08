@@ -68,6 +68,7 @@ const AppShell = () => {
         <Route path="/espace-patient/documents" element={<ProtectedRoute><PatientDocuments /></ProtectedRoute>} />
         <Route path="/espace-patient/suivi" element={<ProtectedRoute><PatientHealth /></ProtectedRoute>} />
         <Route path="/espace-patient/profil" element={<ProtectedRoute><PatientProfile /></ProtectedRoute>} />
+        <Route path="/page/:slug" element={<DynamicPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
