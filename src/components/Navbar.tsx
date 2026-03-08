@@ -63,44 +63,32 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          {user ? (
-            <>
-              {isAdmin && (
-                <Link
-                  to="/admin"
-                  className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-                    location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
-                  }`}
-                >
-                  <ShieldCheck className="h-4 w-4" />
-                  Admin
-                </Link>
-              )}
-              {!isAdmin && (
-                <Link
-                  to="/espace-patient"
-                  className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Espace Patient
-                </Link>
-              )}
-              <button
-                onClick={signOut}
-                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-              >
-                <LogOut className="h-4 w-4" />
-                Déconnexion
-              </button>
-            </>
-          ) : (
+          {user && isAdmin && (
             <Link
-              to="/auth"
-              className="flex items-center gap-2 bg-primary text-primary-foreground px-5 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+              to="/admin"
+              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+              }`}
             >
-              <LogIn className="h-4 w-4" />
-              Connexion
+              <ShieldCheck className="h-4 w-4" />
+              Admin
             </Link>
+          )}
+          <Link
+            to="/espace-patient"
+            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Espace Patient
+          </Link>
+          {user && (
+            <button
+              onClick={signOut}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            >
+              <LogOut className="h-4 w-4" />
+              Déconnexion
+            </button>
           )}
         </div>
 
