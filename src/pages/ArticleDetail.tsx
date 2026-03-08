@@ -1,6 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Calendar, ArrowLeft, ArrowRight } from "lucide-react";
 import { articles } from "@/data/articles";
+import CommentSection from "@/components/CommentSection";
 
 const ArticleDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -64,6 +65,9 @@ const ArticleDetail = () => {
                 </p>
               ))}
             </div>
+
+            {/* Comments */}
+            <CommentSection articleSlug={article.slug} />
 
             {/* Navigation between articles */}
             <div className="border-t border-border mt-12 pt-8 grid sm:grid-cols-2 gap-4">
