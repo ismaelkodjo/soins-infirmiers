@@ -132,10 +132,11 @@ const Contact = () => {
                 </div>
                 <button
                   type="submit"
-                  className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2"
+                  disabled={loading}
+                  className="bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center gap-2 disabled:opacity-50"
                 >
-                  <Send className="h-4 w-4" />
-                  Envoyer
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  {loading ? "Envoi..." : "Envoyer"}
                 </button>
               </form>
             </div>
