@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      appointments: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          status: string
+          time: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          status?: string
+          time: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          status?: string
+          time?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       articles: {
         Row: {
           category: string

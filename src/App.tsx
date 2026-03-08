@@ -13,6 +13,10 @@ import Contact from "./pages/Contact";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import PatientDashboard from "./pages/PatientDashboard";
+import PatientAppointments from "./pages/PatientAppointments";
+import PatientDocuments from "./pages/PatientDocuments";
+import PatientHealth from "./pages/PatientHealth";
+import PatientProfile from "./pages/PatientProfile";
 import ArticleDetail from "./pages/ArticleDetail";
 import Shop from "./pages/Shop";
 import NotFound from "./pages/NotFound";
@@ -37,11 +41,23 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route
               path="/espace-patient"
-              element={
-                <ProtectedRoute>
-                  <PatientDashboard />
-                </ProtectedRoute>
-              }
+              element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/rendez-vous"
+              element={<ProtectedRoute><PatientAppointments /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/documents"
+              element={<ProtectedRoute><PatientDocuments /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/suivi"
+              element={<ProtectedRoute><PatientHealth /></ProtectedRoute>}
+            />
+            <Route
+              path="/espace-patient/profil"
+              element={<ProtectedRoute><PatientProfile /></ProtectedRoute>}
             />
             <Route path="*" element={<NotFound />} />
           </Routes>
