@@ -1,31 +1,5 @@
-import blogHomeCare from "@/assets/blog-home-care.jpg";
-import blogWellness from "@/assets/blog-wellness.jpg";
-import blogPrevention from "@/assets/blog-prevention.jpg";
 import { Calendar } from "lucide-react";
-
-const articles = [
-  {
-    title: "Les soins infirmiers à domicile : ce qu'il faut savoir",
-    excerpt: "Découvrez les avantages des soins à domicile et comment ils peuvent améliorer votre qualité de vie au quotidien.",
-    image: blogHomeCare,
-    date: "5 mars 2026",
-    category: "Soins à domicile",
-  },
-  {
-    title: "Bien-être et prévention : les conseils de votre infirmier",
-    excerpt: "Des gestes simples pour préserver votre santé et prévenir les maladies courantes. Nos recommandations professionnelles.",
-    image: blogWellness,
-    date: "28 février 2026",
-    category: "Bien-être",
-  },
-  {
-    title: "Alimentation et santé : les bases d'une bonne nutrition",
-    excerpt: "Comment une alimentation équilibrée peut renforcer votre système immunitaire et prévenir de nombreuses pathologies.",
-    image: blogPrevention,
-    date: "20 février 2026",
-    category: "Prévention",
-  },
-];
+import { articles } from "@/data/articles";
 
 const Blog = () => {
   return (
@@ -45,7 +19,7 @@ const Blog = () => {
       {/* Articles */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {articles.map((article) => (
               <article
                 key={article.title}
@@ -62,7 +36,7 @@ const Blog = () => {
                   <span className="text-xs font-semibold text-primary uppercase tracking-wide">
                     {article.category}
                   </span>
-                  <h2 className="font-display text-xl font-semibold text-card-foreground mt-2 mb-3 leading-snug">
+                  <h2 className="font-display text-lg font-semibold text-card-foreground mt-2 mb-3 leading-snug">
                     {article.title}
                   </h2>
                   <p className="text-muted-foreground text-sm leading-relaxed mb-4">
