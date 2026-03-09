@@ -67,6 +67,13 @@ const Auth = () => {
               ? "Connectez-vous à votre espace patient"
               : "Créez votre compte patient"}
           </p>
+          {!forgotPassword && (
+            <div className="mt-4 bg-accent/50 border border-border rounded-lg px-4 py-3 text-sm text-muted-foreground">
+              <p>
+                L'<strong className="text-foreground">Espace Patient</strong> vous permet de gérer vos rendez-vous, consulter vos documents médicaux et suivre votre santé. Un compte est nécessaire pour y accéder.
+              </p>
+            </div>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="bg-card rounded-xl p-8 shadow-card space-y-5">
