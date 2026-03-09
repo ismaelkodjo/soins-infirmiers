@@ -161,6 +161,12 @@ const PatientAppointments = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-card-foreground text-sm">{appt.type}</p>
+                  {appt.provider_type && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <UserRound className="h-3 w-3" />
+                      {PROVIDER_TYPES.find((p) => p.value === appt.provider_type)?.label || appt.provider_type}
+                    </p>
+                  )}
                   <p className="text-muted-foreground text-xs mt-0.5">
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
