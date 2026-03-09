@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Upload, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface Article {
@@ -19,7 +19,7 @@ interface Article {
   content: string[];
 }
 
-const emptyForm = { title: "", slug: "", excerpt: "", category: "", image_url: "", date: "", content: "", published: true };
+const emptyForm = { title: "", slug: "", excerpt: "", category: "", image_url: "", date: "", content: "", published: false };
 
 const AdminArticles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -28,6 +28,8 @@ const AdminArticles = () => {
   const [editing, setEditing] = useState<Article | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchArticles = async () => {
     const { data } = await supabase.from("articles").select("*").order("created_at", { ascending: false });
@@ -56,6 +58,22 @@ const AdminArticles = () => {
       published: a.published,
     });
     setOpen(true);
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `articles/${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from("blog-images").upload(path, file);
+    if (error) {
+      toast({ title: "Erreur upload", description: error.message, variant: "destructive" });
+    } else {
+      const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(path);
+      setForm((f) => ({ ...f, image_url: urlData.publicUrl }));
+    }
+    setUploading(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,8 +150,16 @@ const AdminArticles = () => {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground">Image URL</label>
-                <Input value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} required />
+                <label className="text-sm font-medium text-foreground">Image à la Une</label>
+                <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="hidden" />
+                <div className="mt-1">
+                  {form.image_url && (
+                    <img src={form.image_url} alt="Aperçu" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
+                  )}
+                  <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                    {uploading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4 mr-1" /> {form.image_url ? "Changer l'image" : "Télécharger une image"}</>}
+                  </Button>
+                </div>
               </div>
               <div>
                 <label className="text-sm font-medium text-foreground">Extrait</label>
