@@ -43,6 +43,23 @@ const queryClient = new QueryClient();
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isStaff = location.pathname.startsWith("/staff") && !location.pathname.startsWith("/staff-auth");
+
+  if (isStaff) {
+    return (
+      <Routes>
+        <Route
+          path="/staff"
+          element={<StaffProtectedRoute><StaffDashboard /></StaffProtectedRoute>}
+        >
+          <Route index element={<StaffHome />} />
+          <Route path="ordonnances" element={<StaffOrdonnances />} />
+          <Route path="rendez-vous" element={<StaffAppointments />} />
+          <Route path="resultats" element={<StaffLabResults />} />
+        </Route>
+      </Routes>
+    );
+  }
 
   if (isAdmin) {
     return (
