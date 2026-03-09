@@ -21,6 +21,11 @@ const Auth = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
 
+  const rulesStatus = useMemo(
+    () => passwordRules.map((r) => ({ ...r, valid: r.test(password) })),
+    [password]
+  );
+  const allRulesValid = rulesStatus.every((r) => r.valid);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
