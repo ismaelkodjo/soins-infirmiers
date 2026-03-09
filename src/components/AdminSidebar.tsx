@@ -78,6 +78,11 @@ export function AdminSidebar() {
                           {unreadCount}
                         </span>
                       )}
+                      {item.title === "Personnel" && pendingStaffCount > 0 && (
+                        <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold h-5 min-w-[20px] px-1">
+                          {pendingStaffCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
