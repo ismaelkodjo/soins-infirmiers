@@ -28,6 +28,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminPatients from "./pages/admin/AdminPatients";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminStaff from "./pages/admin/AdminStaff";
 import StaffAuth from "./pages/StaffAuth";
 import StaffProtectedRoute from "./components/StaffProtectedRoute";
 import StaffDashboard from "./pages/staff/StaffDashboard";
@@ -74,6 +75,7 @@ const AppShell = () => {
           <Route path="messages" element={<AdminMessages />} />
           <Route path="pages" element={<AdminPages />} />
           <Route path="patients" element={<AdminPatients />} />
+          <Route path="personnel" element={<AdminStaff />} />
           <Route path="notifications" element={<AdminNotifications />} />
         </Route>
       </Routes>
