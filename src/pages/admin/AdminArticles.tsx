@@ -121,8 +121,14 @@ const AdminArticles = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <h1 className="font-display text-2xl font-bold text-foreground">Articles</h1>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-muted rounded-lg p-0.5 text-sm">
+            {([["all", "Tous"], ["published", "Publiés"], ["draft", "Brouillons"]] as const).map(([key, label]) => (
+              <button key={key} onClick={() => setFilter(key)} className={`px-3 py-1.5 rounded-md transition-colors ${filter === key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{label}</button>
+            ))}
+          </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button size="sm" onClick={openCreate}><Plus className="h-4 w-4 mr-1" /> Nouvel article</Button>
