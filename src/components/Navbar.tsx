@@ -55,7 +55,8 @@ const Navbar = () => {
   ];
 
   const displayName = profile?.display_name || user?.user_metadata?.display_name;
-  const patientLabel = user && displayName ? `Espace ${displayName}` : "Espace Patient";
+  const truncatedName = displayName && displayName.length > 15 ? displayName.slice(0, 15) + "…" : displayName;
+  const patientLabel = user && truncatedName ? `Espace ${truncatedName}` : "Espace Patient";
 
   const isActive = (path: string) => location.pathname === path;
 
