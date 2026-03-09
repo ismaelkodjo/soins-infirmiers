@@ -50,6 +50,7 @@ const AppShell = () => {
           <Route path="messages" element={<AdminMessages />} />
           <Route path="pages" element={<AdminPages />} />
           <Route path="patients" element={<AdminPatients />} />
+          <Route path="notifications" element={<AdminNotifications />} />
         </Route>
       </Routes>
     );
