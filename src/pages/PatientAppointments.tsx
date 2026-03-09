@@ -100,6 +100,7 @@ const PatientAppointments = () => {
 
   useEffect(() => {
     fetchAppointments();
+    fetchStaff();
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
