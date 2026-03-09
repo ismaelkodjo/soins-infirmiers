@@ -217,6 +217,11 @@ const PatientAppointments = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-card-foreground text-sm">{appt.type}</p>
+                  {appt.staff_name && (
+                    <p className="text-muted-foreground text-xs mt-0.5 flex items-center gap-1">
+                      <User className="h-3 w-3" /> {appt.staff_name}
+                    </p>
+                  )}
                   <p className="text-muted-foreground text-xs mt-0.5">
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
