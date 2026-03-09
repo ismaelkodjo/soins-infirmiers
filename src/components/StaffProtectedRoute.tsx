@@ -1,12 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole } from "@/hooks/useStaffRole";
+import { useAdminCheck } from "@/hooks/useAdminCheck";
 
 const StaffProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading: authLoading } = useAuth();
   const { role, approved, loading } = useStaffRole();
+  const { isAdmin, loading: adminLoading } = useAdminCheck();
 
-  if (authLoading || loading) {
+  if (authLoading || loading || adminLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-muted-foreground animate-pulse">Chargement...</div>
@@ -15,6 +17,10 @@ const StaffProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!user) return <Navigate to="/staff-auth" replace />;
+
+  // Admins can access staff area directly
+  if (isAdmin) return <>{children}</>;
+
   if (!role) return <Navigate to="/staff-auth" replace />;
 
   if (!approved) {
