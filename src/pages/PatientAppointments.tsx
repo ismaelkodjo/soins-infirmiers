@@ -60,6 +60,20 @@ const PatientAppointments = () => {
     }
   };
 
+  const updateStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("appointments")
+      .update({ status })
+      .eq("id", id)
+      .eq("user_id", user!.id);
+    if (error) {
+      toast({ title: "Erreur", description: "Impossible de mettre à jour le statut.", variant: "destructive" });
+    } else {
+      toast({ title: "Statut mis à jour", description: `Rendez-vous ${status}.` });
+      fetchAppointments();
+    }
+  };
+
   const statusColor = (status: string) => {
     if (status === "confirmé") return "bg-green-100 text-green-700";
     if (status === "annulé") return "bg-destructive/10 text-destructive";
