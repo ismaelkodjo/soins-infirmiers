@@ -9,13 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
-const PROVIDER_TYPES = [
-  { value: "medecin", label: "Médecin" },
-  { value: "infirmier_diplome", label: "Infirmier diplômé d'État" },
-  { value: "sage_femme", label: "Sage-femme d'État" },
-  { value: "technicien_labo", label: "Technicien supérieur de laboratoire" },
-  { value: "infirmier_auxiliaire", label: "Infirmier auxiliaire d'État" },
-  { value: "accoucheuse_auxiliaire", label: "Accoucheuse auxiliaire d'État" },
+const SERVICE_TYPES = [
+  { value: "medecine_generale", label: "Médecine générale" },
+  { value: "maternite", label: "Maternité" },
+  { value: "laboratoire", label: "Laboratoire" },
 ];
 
 interface Appointment {
@@ -111,21 +108,21 @@ const PatientAppointments = () => {
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 <div>
-                  <label className="text-sm font-medium text-foreground">Type de soin</label>
-                  <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Prise de sang, Pansement..." required />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Prestataire souhaité</label>
+                  <label className="text-sm font-medium text-foreground">Service</label>
                   <Select value={form.provider_type} onValueChange={(val) => setForm({ ...form, provider_type: val })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Choisir un type de prestataire" />
+                      <SelectValue placeholder="Choisir un service" />
                     </SelectTrigger>
                     <SelectContent>
-                      {PROVIDER_TYPES.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                      {SERVICE_TYPES.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Motif</label>
+                  <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Consultation, Prise de sang..." required />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -164,7 +161,7 @@ const PatientAppointments = () => {
                   {appt.provider_type && (
                     <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                       <UserRound className="h-3 w-3" />
-                      {PROVIDER_TYPES.find((p) => p.value === appt.provider_type)?.label || appt.provider_type}
+                      {SERVICE_TYPES.find((s) => s.value === appt.provider_type)?.label || appt.provider_type}
                     </p>
                   )}
                   <p className="text-muted-foreground text-xs mt-0.5">
