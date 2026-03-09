@@ -92,13 +92,15 @@ const Navbar = () => {
               Admin
             </Link>
           )}
-          <Link
-            to="/espace-patient"
-            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            {patientLabel}
-          </Link>
+          {!isAdmin && (
+            <Link
+              to="/espace-patient"
+              className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              {patientLabel}
+            </Link>
+          )}
           {user && (
             <button
               onClick={signOut}
