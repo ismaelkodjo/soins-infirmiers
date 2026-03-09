@@ -24,6 +24,7 @@ const emptyForm = { title: "", slug: "", excerpt: "", category: "", image_url: "
 const AdminArticles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Article | null>(null);
   const [form, setForm] = useState(emptyForm);

@@ -23,6 +23,7 @@ const emptyForm = { name: "", description: "", price: "0", category: "", image_u
 const AdminProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(emptyForm);
