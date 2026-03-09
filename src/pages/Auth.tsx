@@ -44,6 +44,11 @@ const Auth = () => {
         toast.success("Connexion réussie !");
         navigate("/");
       } else {
+        if (!allRulesValid) {
+          toast.error("Le mot de passe ne respecte pas toutes les règles de complexité");
+          setLoading(false);
+          return;
+        }
         if (password !== confirmPassword) {
           toast.error("Les mots de passe ne correspondent pas");
           setLoading(false);
