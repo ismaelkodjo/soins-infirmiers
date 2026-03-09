@@ -90,6 +90,7 @@ const AppShell = () => {
         <Route path="/blog/:slug" element={<ArticleDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/staff-auth" element={<StaffAuth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/espace-patient" element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>} />
         <Route path="/espace-patient/rendez-vous" element={<ProtectedRoute><PatientAppointments /></ProtectedRoute>} />
