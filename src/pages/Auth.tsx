@@ -149,8 +149,9 @@ const Auth = () => {
                 />
               </div>
             </div>
-          )
-            type="submit"
+          )}
+
+          <button
             disabled={loading}
             className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
           >
