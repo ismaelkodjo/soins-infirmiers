@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Plus } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -56,6 +56,20 @@ const PatientAppointments = () => {
       toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
       setOpen(false);
       setForm({ date: "", time: "", type: "" });
+      fetchAppointments();
+    }
+  };
+
+  const updateStatus = async (id: string, status: string) => {
+    const { error } = await supabase
+      .from("appointments")
+      .update({ status })
+      .eq("id", id)
+      .eq("user_id", user!.id);
+    if (error) {
+      toast({ title: "Erreur", description: "Impossible de mettre à jour le statut.", variant: "destructive" });
+    } else {
+      toast({ title: "Statut mis à jour", description: `Rendez-vous ${status}.` });
       fetchAppointments();
     }
   };
@@ -126,9 +140,21 @@ const PatientAppointments = () => {
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ${statusColor(appt.status)}`}>
-                  {appt.status}
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${statusColor(appt.status)}`}>
+                    {appt.status}
+                  </span>
+                  {appt.status === "à venir" && (
+                    <>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-green-600 border-green-200 hover:bg-green-50" onClick={() => updateStatus(appt.id, "confirmé")}>
+                        <Check className="h-3.5 w-3.5" /> Confirmer
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-destructive border-destructive/20 hover:bg-destructive/5" onClick={() => updateStatus(appt.id, "annulé")}>
+                        <XCircle className="h-3.5 w-3.5" /> Annuler
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>
