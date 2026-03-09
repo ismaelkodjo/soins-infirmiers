@@ -2,11 +2,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+
+const PROVIDER_TYPES = [
+  { value: "medecin", label: "Médecin" },
+  { value: "infirmier_diplome", label: "Infirmier diplômé d'État" },
+  { value: "sage_femme", label: "Sage-femme d'État" },
+  { value: "technicien_labo", label: "Technicien supérieur de laboratoire" },
+  { value: "infirmier_auxiliaire", label: "Infirmier auxiliaire d'État" },
+  { value: "accoucheuse_auxiliaire", label: "Accoucheuse auxiliaire d'État" },
+];
 
 interface Appointment {
   id: string;
@@ -14,6 +24,7 @@ interface Appointment {
   time: string;
   type: string;
   status: string;
+  provider_type: string | null;
 }
 
 const PatientAppointments = () => {
@@ -21,7 +32,7 @@ const PatientAppointments = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ date: "", time: "", type: "" });
+  const [form, setForm] = useState({ date: "", time: "", type: "", provider_type: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const fetchAppointments = async () => {
@@ -48,14 +59,15 @@ const PatientAppointments = () => {
       date: form.date,
       time: form.time,
       type: form.type,
-    });
+      provider_type: form.provider_type || null,
+    } as any);
     setSubmitting(false);
     if (error) {
       toast({ title: "Erreur", description: "Impossible de créer le rendez-vous.", variant: "destructive" });
     } else {
       toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
       setOpen(false);
-      setForm({ date: "", time: "", type: "" });
+      setForm({ date: "", time: "", type: "", provider_type: "" });
       fetchAppointments();
     }
   };
@@ -102,6 +114,19 @@ const PatientAppointments = () => {
                   <label className="text-sm font-medium text-foreground">Type de soin</label>
                   <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Prise de sang, Pansement..." required />
                 </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Prestataire souhaité</label>
+                  <Select value={form.provider_type} onValueChange={(val) => setForm({ ...form, provider_type: val })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir un type de prestataire" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PROVIDER_TYPES.map((p) => (
+                        <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-medium text-foreground">Date</label>
@@ -136,6 +161,12 @@ const PatientAppointments = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-card-foreground text-sm">{appt.type}</p>
+                  {appt.provider_type && (
+                    <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                      <UserRound className="h-3 w-3" />
+                      {PROVIDER_TYPES.find((p) => p.value === appt.provider_type)?.label || appt.provider_type}
+                    </p>
+                  )}
                   <p className="text-muted-foreground text-xs mt-0.5">
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
