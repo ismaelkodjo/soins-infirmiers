@@ -138,7 +138,8 @@ const AdminProducts = () => {
               <div>
                 <label className="text-sm font-medium text-foreground">Nom</label>
                 <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-              </div>
+        </div>
+      </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-sm font-medium text-foreground">Prix (FCFA)</label>
