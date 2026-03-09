@@ -28,6 +28,13 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminPatients from "./pages/admin/AdminPatients";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import StaffAuth from "./pages/StaffAuth";
+import StaffProtectedRoute from "./components/StaffProtectedRoute";
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import StaffHome from "./pages/staff/StaffHome";
+import StaffOrdonnances from "./pages/staff/StaffOrdonnances";
+import StaffAppointments from "./pages/staff/StaffAppointments";
+import StaffLabResults from "./pages/staff/StaffLabResults";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
@@ -36,6 +43,23 @@ const queryClient = new QueryClient();
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
+  const isStaff = location.pathname.startsWith("/staff") && !location.pathname.startsWith("/staff-auth");
+
+  if (isStaff) {
+    return (
+      <Routes>
+        <Route
+          path="/staff"
+          element={<StaffProtectedRoute><StaffDashboard /></StaffProtectedRoute>}
+        >
+          <Route index element={<StaffHome />} />
+          <Route path="ordonnances" element={<StaffOrdonnances />} />
+          <Route path="rendez-vous" element={<StaffAppointments />} />
+          <Route path="resultats" element={<StaffLabResults />} />
+        </Route>
+      </Routes>
+    );
+  }
 
   if (isAdmin) {
     return (
@@ -66,6 +90,7 @@ const AppShell = () => {
         <Route path="/blog/:slug" element={<ArticleDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/staff-auth" element={<StaffAuth />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/espace-patient" element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>} />
         <Route path="/espace-patient/rendez-vous" element={<ProtectedRoute><PatientAppointments /></ProtectedRoute>} />
