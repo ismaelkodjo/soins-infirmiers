@@ -134,17 +134,7 @@ const AdminProducts = () => {
                     <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Image à la Une</label>
-                  <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="hidden" />
-                  <div className="mt-1">
-                    {form.image_url && (
-                      <img src={form.image_url} alt="Aperçu" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
-                    )}
-                    <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-                      {uploading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4 mr-1" /> {form.image_url ? "Changer l'image" : "Télécharger une image"}</>}
-                    </Button>
-                  </div>
+                <ImageDropZone value={form.image_url} onChange={(url) => setForm((f) => ({ ...f, image_url: url }))} folder="products" />
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground">Description</label>
