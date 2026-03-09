@@ -107,12 +107,14 @@ const PatientAppointments = () => {
     e.preventDefault();
     if (!user) return;
     setSubmitting(true);
-    const { error } = await supabase.from("appointments").insert({
+    const insertData: any = {
       user_id: user.id,
       date: form.date,
       time: form.time,
       type: form.type,
-    });
+    };
+    if (form.staff_id) insertData.staff_id = form.staff_id;
+    const { error } = await supabase.from("appointments").insert(insertData);
     setSubmitting(false);
     if (error) {
       toast({ title: "Erreur", description: "Impossible de créer le rendez-vous.", variant: "destructive" });
