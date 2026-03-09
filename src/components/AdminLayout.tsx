@@ -18,6 +18,7 @@ const AdminLayout = () => {
           </main>
         </div>
       </div>
+      <AdminArticleChatbot />
     </SidebarProvider>
   );
 };
