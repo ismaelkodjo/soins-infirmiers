@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Heart, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Heart, Mail, Lock, User, ArrowRight, Check, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const passwordRules = [
+  { label: "8 caractères minimum", test: (p: string) => p.length >= 8 },
+  { label: "Une lettre majuscule", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "Un chiffre", test: (p: string) => /\d/.test(p) },
+  { label: "Un caractère spécial (!@#$...)", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -14,6 +21,11 @@ const Auth = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
   const navigate = useNavigate();
 
+  const rulesStatus = useMemo(
+    () => passwordRules.map((r) => ({ ...r, valid: r.test(password) })),
+    [password]
+  );
+  const allRulesValid = rulesStatus.every((r) => r.valid);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -32,6 +44,11 @@ const Auth = () => {
         toast.success("Connexion réussie !");
         navigate("/");
       } else {
+        if (!allRulesValid) {
+          toast.error("Le mot de passe ne respecte pas toutes les règles de complexité");
+          setLoading(false);
+          return;
+        }
         if (password !== confirmPassword) {
           toast.error("Les mots de passe ne correspondent pas");
           setLoading(false);
@@ -127,9 +144,25 @@ const Auth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="••••••••"
-                  minLength={6}
+                  minLength={8}
                 />
               </div>
+              {!isLogin && password.length > 0 && (
+                <ul className="mt-2 space-y-1">
+                  {rulesStatus.map((rule) => (
+                    <li key={rule.label} className="flex items-center gap-1.5 text-xs">
+                      {rule.valid ? (
+                        <Check className="h-3.5 w-3.5 text-primary" />
+                      ) : (
+                        <X className="h-3.5 w-3.5 text-destructive" />
+                      )}
+                      <span className={rule.valid ? "text-primary" : "text-muted-foreground"}>
+                        {rule.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 
