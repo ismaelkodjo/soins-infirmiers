@@ -161,7 +161,7 @@ const PatientAppointments = () => {
                   {appt.provider_type && (
                     <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                       <UserRound className="h-3 w-3" />
-                      {PROVIDER_TYPES.find((p) => p.value === appt.provider_type)?.label || appt.provider_type}
+                      {SERVICE_TYPES.find((s) => s.value === appt.provider_type)?.label || appt.provider_type}
                     </p>
                   )}
                   <p className="text-muted-foreground text-xs mt-0.5">
