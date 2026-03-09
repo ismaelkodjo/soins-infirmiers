@@ -28,6 +28,7 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminPatients from "./pages/admin/AdminPatients";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import AdminStaff from "./pages/admin/AdminStaff";
 import StaffAuth from "./pages/StaffAuth";
 import StaffProtectedRoute from "./components/StaffProtectedRoute";
 import StaffDashboard from "./pages/staff/StaffDashboard";
