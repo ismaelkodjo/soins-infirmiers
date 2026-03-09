@@ -27,6 +27,7 @@ import AdminProducts from "./pages/admin/AdminProducts";
 import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminPatients from "./pages/admin/AdminPatients";
+import AdminNotifications from "./pages/admin/AdminNotifications";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
@@ -49,6 +50,7 @@ const AppShell = () => {
           <Route path="messages" element={<AdminMessages />} />
           <Route path="pages" element={<AdminPages />} />
           <Route path="patients" element={<AdminPatients />} />
+          <Route path="notifications" element={<AdminNotifications />} />
         </Route>
       </Routes>
     );

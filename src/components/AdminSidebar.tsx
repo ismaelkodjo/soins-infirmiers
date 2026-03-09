@@ -1,6 +1,8 @@
-import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users } from "lucide-react";
+import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users, Bell } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Sidebar,
   SidebarContent,
@@ -20,13 +22,25 @@ const items = [
   { title: "Pages", url: "/admin/pages", icon: FilePlus2 },
   { title: "Messages", url: "/admin/messages", icon: MessageSquare },
   { title: "Patients", url: "/admin/patients", icon: Users },
+  { title: "Notifications", url: "/admin/notifications", icon: Bell },
 ];
 
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
-  const currentPath = location.pathname;
+
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ["admin-unread-notifications"],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("notifications")
+        .select("id", { count: "exact", head: true })
+        .eq("read", false);
+      return count || 0;
+    },
+    refetchInterval: 30000,
+  });
 
   return (
     <Sidebar collapsible="icon">
@@ -46,6 +60,11 @@ export function AdminSidebar() {
                     >
                       <item.icon className="mr-2 h-4 w-4" />
                       {!collapsed && <span>{item.title}</span>}
+                      {item.title === "Notifications" && unreadCount > 0 && (
+                        <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold h-5 min-w-[20px] px-1">
+                          {unreadCount}
+                        </span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
