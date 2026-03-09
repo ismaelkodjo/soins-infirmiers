@@ -140,9 +140,21 @@ const PatientAppointments = () => {
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ${statusColor(appt.status)}`}>
-                  {appt.status}
-                </span>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${statusColor(appt.status)}`}>
+                    {appt.status}
+                  </span>
+                  {appt.status === "à venir" && (
+                    <>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-green-600 border-green-200 hover:bg-green-50" onClick={() => updateStatus(appt.id, "confirmé")}>
+                        <Check className="h-3.5 w-3.5" /> Confirmer
+                      </Button>
+                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-destructive border-destructive/20 hover:bg-destructive/5" onClick={() => updateStatus(appt.id, "annulé")}>
+                        <XCircle className="h-3.5 w-3.5" /> Annuler
+                      </Button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
           </div>
