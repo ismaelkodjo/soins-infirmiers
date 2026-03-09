@@ -8,6 +8,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
@@ -31,6 +32,11 @@ const Auth = () => {
         toast.success("Connexion réussie !");
         navigate("/");
       } else {
+        if (password !== confirmPassword) {
+          toast.error("Les mots de passe ne correspondent pas");
+          setLoading(false);
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -127,8 +133,25 @@ const Auth = () => {
             </div>
           )}
 
+          {!isLogin && !forgotPassword && (
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">Confirmer le mot de passe</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="password"
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="••••••••"
+                  minLength={6}
+                />
+              </div>
+            </div>
+          )}
+
           <button
-            type="submit"
             disabled={loading}
             className="w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity flex items-center justify-center gap-2 disabled:opacity-50"
           >
