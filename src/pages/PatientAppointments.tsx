@@ -121,7 +121,7 @@ const PatientAppointments = () => {
     } else {
       toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
       setOpen(false);
-      setForm({ date: "", time: "", type: "" });
+      setForm({ date: "", time: "", type: "", staff_id: "" });
       fetchAppointments();
     }
   };
