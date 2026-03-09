@@ -30,8 +30,38 @@ const PatientAppointments = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ date: "", time: "", type: "" });
+  const [form, setForm] = useState({ date: "", time: "", type: "", staff_id: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [staffOptions, setStaffOptions] = useState<StaffOption[]>([]);
+
+  const ROLE_LABELS: Record<string, string> = {
+    medecin: "Médecin",
+    infirmier_diplome: "Infirmier(e) diplômé(e)",
+    sage_femme: "Sage-femme",
+    technicien_labo: "Technicien labo",
+    infirmier_auxiliaire: "Infirmier(e) auxiliaire",
+    accoucheuse_auxiliaire: "Accoucheuse auxiliaire",
+  };
+
+  const fetchStaff = async () => {
+    const { data: staff } = await supabase
+      .from("staff_members")
+      .select("user_id, role")
+      .eq("approved", true);
+    if (!staff) return;
+
+    const userIds = staff.map((s) => s.user_id);
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("user_id, display_name")
+      .in("user_id", userIds);
+
+    const options: StaffOption[] = staff.map((s) => ({
+      ...s,
+      display_name: profiles?.find((p) => p.user_id === s.user_id)?.display_name || null,
+    }));
+    setStaffOptions(options);
+  };
 
   const fetchAppointments = async () => {
     if (!user) return;
@@ -40,7 +70,31 @@ const PatientAppointments = () => {
       .select("*")
       .eq("user_id", user.id)
       .order("date", { ascending: true });
-    setAppointments(data || []);
+
+    if (data) {
+      // Fetch staff names for appointments with staff_id
+      const staffIds = data.filter((a) => a.staff_id).map((a) => a.staff_id!);
+      let staffProfiles: Record<string, string> = {};
+      if (staffIds.length > 0) {
+        const { data: profiles } = await supabase
+          .from("profiles")
+          .select("user_id, display_name")
+          .in("user_id", staffIds);
+        if (profiles) {
+          profiles.forEach((p) => {
+            staffProfiles[p.user_id] = p.display_name || "Prestataire";
+          });
+        }
+      }
+      setAppointments(
+        data.map((a) => ({
+          ...a,
+          staff_name: a.staff_id ? staffProfiles[a.staff_id] || "Prestataire" : undefined,
+        }))
+      );
+    } else {
+      setAppointments([]);
+    }
     setLoading(false);
   };
 
