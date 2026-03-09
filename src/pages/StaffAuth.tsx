@@ -48,14 +48,19 @@ const StaffAuth = () => {
         const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
-        // Verify staff membership
+        // Verify staff membership or admin role
         const { data: staff } = await supabase
           .from("staff_members")
           .select("approved")
           .eq("user_id", authData.user.id)
           .maybeSingle();
 
-        if (!staff) {
+        const { data: isAdmin } = await supabase.rpc("has_role" as any, {
+          _user_id: authData.user.id,
+          _role: "admin",
+        });
+
+        if (!staff && !isAdmin) {
           await supabase.auth.signOut();
           toast.error("Ce compte n'est pas enregistré comme personnel du cabinet.");
           return;
