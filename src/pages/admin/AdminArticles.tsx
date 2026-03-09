@@ -20,7 +20,13 @@ interface Article {
   content: string[];
 }
 
-const emptyForm = { title: "", slug: "", excerpt: "", category: "", image_url: "", date: "", content: "", published: false };
+const todayFormatted = () => {
+  const d = new Date();
+  const months = ["janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"];
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+};
+
+const emptyForm = { title: "", slug: "", excerpt: "", category: "", image_url: "", date: todayFormatted(), content: "", published: false };
 
 const AdminArticles = () => {
   const [articles, setArticles] = useState<Article[]>([]);
