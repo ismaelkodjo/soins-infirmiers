@@ -60,22 +60,6 @@ const AdminArticles = () => {
     setOpen(true);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `articles/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("blog-images").upload(path, file);
-    if (error) {
-      toast({ title: "Erreur upload", description: error.message, variant: "destructive" });
-    } else {
-      const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(path);
-      setForm((f) => ({ ...f, image_url: urlData.publicUrl }));
-    }
-    setUploading(false);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
