@@ -152,7 +152,7 @@ const Navbar = () => {
             className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
           >
             <LayoutDashboard className="h-4 w-4" />
-            Espace Patient
+            {patientLabel}
           </Link>
           {user && (
             <button
