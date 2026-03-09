@@ -32,6 +32,11 @@ const Auth = () => {
         toast.success("Connexion réussie !");
         navigate("/");
       } else {
+        if (password !== confirmPassword) {
+          toast.error("Les mots de passe ne correspondent pas");
+          setLoading(false);
+          return;
+        }
         const { error } = await supabase.auth.signUp({
           email,
           password,
