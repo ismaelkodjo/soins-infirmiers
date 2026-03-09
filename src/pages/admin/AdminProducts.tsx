@@ -201,7 +201,7 @@ const AdminProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((p) => (
+              {products.filter(p => filter === "all" ? true : filter === "published" ? p.published : !p.published).map((p) => (
                 <tr key={p.id} className="border-b border-border last:border-0">
                   <td className="p-4 text-card-foreground font-medium">{p.name}</td>
                   <td className="p-4 text-muted-foreground hidden sm:table-cell">{p.price.toLocaleString()} FCFA</td>

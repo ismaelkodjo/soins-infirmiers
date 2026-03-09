@@ -205,7 +205,7 @@ const AdminArticles = () => {
               </tr>
             </thead>
             <tbody>
-              {articles.map((a) => (
+              {articles.filter(a => filter === "all" ? true : filter === "published" ? a.published : !a.published).map((a) => (
                 <tr key={a.id} className="border-b border-border last:border-0">
                   <td className="p-4 text-card-foreground font-medium">{a.title}</td>
                   <td className="p-4 text-muted-foreground hidden sm:table-cell">{a.category}</td>
