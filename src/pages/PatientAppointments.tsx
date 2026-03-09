@@ -59,14 +59,15 @@ const PatientAppointments = () => {
       date: form.date,
       time: form.time,
       type: form.type,
-    });
+      provider_type: form.provider_type || null,
+    } as any);
     setSubmitting(false);
     if (error) {
       toast({ title: "Erreur", description: "Impossible de créer le rendez-vous.", variant: "destructive" });
     } else {
       toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
       setOpen(false);
-      setForm({ date: "", time: "", type: "" });
+      setForm({ date: "", time: "", type: "", provider_type: "" });
       fetchAppointments();
     }
   };
