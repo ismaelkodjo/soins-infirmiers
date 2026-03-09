@@ -43,6 +43,18 @@ export function AdminSidebar() {
     refetchInterval: 30000,
   });
 
+  const { data: pendingStaffCount = 0 } = useQuery({
+    queryKey: ["admin-pending-staff-count"],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("staff_members")
+        .select("id", { count: "exact", head: true })
+        .eq("approved", false);
+      return count || 0;
+    },
+    refetchInterval: 30000,
+  });
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
