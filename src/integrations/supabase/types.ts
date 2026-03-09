@@ -137,6 +137,48 @@ export type Database = {
         }
         Relationships: []
       }
+      lab_results: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          patient_id: string
+          reference_range: string | null
+          result: string
+          staff_id: string
+          status: string
+          test_name: string
+          unit: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          patient_id: string
+          reference_range?: string | null
+          result?: string
+          staff_id: string
+          status?: string
+          test_name: string
+          unit?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          reference_range?: string | null
+          result?: string
+          staff_id?: string
+          status?: string
+          test_name?: string
+          unit?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
@@ -170,6 +212,42 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      ordonnances: {
+        Row: {
+          content: string
+          created_at: string
+          diagnosis: string
+          id: string
+          medications: string[]
+          notes: string | null
+          patient_id: string
+          staff_id: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          diagnosis?: string
+          id?: string
+          medications?: string[]
+          notes?: string | null
+          patient_id: string
+          staff_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          diagnosis?: string
+          id?: string
+          medications?: string[]
+          notes?: string | null
+          patient_id?: string
+          staff_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -293,6 +371,33 @@ export type Database = {
         }
         Relationships: []
       }
+      staff_members: {
+        Row: {
+          approved: boolean
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["staff_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["staff_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approved?: boolean
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["staff_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -316,6 +421,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_staff_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["staff_role"]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -323,9 +432,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_approved_staff: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      staff_role:
+        | "medecin"
+        | "infirmier_diplome"
+        | "sage_femme"
+        | "technicien_labo"
+        | "infirmier_auxiliaire"
+        | "accoucheuse_auxiliaire"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -454,6 +571,14 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      staff_role: [
+        "medecin",
+        "infirmier_diplome",
+        "sage_femme",
+        "technicien_labo",
+        "infirmier_auxiliaire",
+        "accoucheuse_auxiliaire",
+      ],
     },
   },
 } as const
