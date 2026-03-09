@@ -28,6 +28,13 @@ import AdminMessages from "./pages/admin/AdminMessages";
 import AdminPages from "./pages/admin/AdminPages";
 import AdminPatients from "./pages/admin/AdminPatients";
 import AdminNotifications from "./pages/admin/AdminNotifications";
+import StaffAuth from "./pages/StaffAuth";
+import StaffProtectedRoute from "./components/StaffProtectedRoute";
+import StaffDashboard from "./pages/staff/StaffDashboard";
+import StaffHome from "./pages/staff/StaffHome";
+import StaffOrdonnances from "./pages/staff/StaffOrdonnances";
+import StaffAppointments from "./pages/staff/StaffAppointments";
+import StaffLabResults from "./pages/staff/StaffLabResults";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
