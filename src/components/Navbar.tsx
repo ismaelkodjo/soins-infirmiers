@@ -54,6 +54,9 @@ const Navbar = () => {
     ...(dynamicPages || []).map((p) => ({ to: `/page/${p.slug}`, label: p.title })),
   ];
 
+  const displayName = profile?.display_name || user?.user_metadata?.display_name;
+  const patientLabel = user && displayName ? `Espace ${displayName}` : "Espace Patient";
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
