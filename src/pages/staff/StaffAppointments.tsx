@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Calendar } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useStaffRole, StaffRole } from "@/hooks/useStaffRole";
 
 const statusColors: Record<string, string> = {
   "à venir": "bg-blue-100 text-blue-800",
@@ -10,14 +11,37 @@ const statusColors: Record<string, string> = {
   "annulé": "bg-red-100 text-red-800",
 };
 
+const SERVICE_LABELS: Record<string, string> = {
+  medecine_generale: "Médecine générale",
+  maternite: "Maternité",
+  laboratoire: "Laboratoire",
+};
+
+const getServiceForRole = (role: StaffRole | null): string | null => {
+  if (!role) return null;
+  if (["medecin", "infirmier_diplome", "infirmier_auxiliaire"].includes(role)) return "medecine_generale";
+  if (["sage_femme", "accoucheuse_auxiliaire"].includes(role)) return "maternite";
+  if (role === "technicien_labo") return "laboratoire";
+  return null;
+};
+
 const StaffAppointments = () => {
+  const { role } = useStaffRole();
+  const serviceFilter = getServiceForRole(role);
+
   const { data: appointments, isLoading } = useQuery({
-    queryKey: ["staff-appointments"],
+    queryKey: ["staff-appointments", serviceFilter],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from("appointments")
         .select("*")
         .order("date", { ascending: true });
+
+      if (serviceFilter) {
+        query = query.eq("provider_type", serviceFilter);
+      }
+
+      const { data, error } = await query;
       if (error) throw error;
       return data;
     },
@@ -27,7 +51,11 @@ const StaffAppointments = () => {
     <div>
       <div className="mb-6">
         <h1 className="font-display text-2xl font-bold text-foreground">Rendez-vous</h1>
-        <p className="text-sm text-muted-foreground">Consulter les rendez-vous des patients</p>
+        <p className="text-sm text-muted-foreground">
+          {serviceFilter
+            ? `Rendez-vous — ${SERVICE_LABELS[serviceFilter] || serviceFilter}`
+            : "Consulter les rendez-vous des patients"}
+        </p>
       </div>
 
       {isLoading ? (
@@ -44,7 +72,8 @@ const StaffAppointments = () => {
               <TableRow>
                 <TableHead>Date</TableHead>
                 <TableHead>Heure</TableHead>
-                <TableHead>Type</TableHead>
+                <TableHead>Motif</TableHead>
+                <TableHead>Service</TableHead>
                 <TableHead>Statut</TableHead>
               </TableRow>
             </TableHeader>
@@ -56,6 +85,9 @@ const StaffAppointments = () => {
                   </TableCell>
                   <TableCell className="text-sm">{apt.time?.slice(0, 5)}</TableCell>
                   <TableCell className="text-sm">{apt.type}</TableCell>
+                  <TableCell className="text-sm">
+                    {SERVICE_LABELS[apt.provider_type || ""] || apt.provider_type || "—"}
+                  </TableCell>
                   <TableCell>
                     <Badge variant="secondary" className={statusColors[apt.status] || ""}>
                       {apt.status}
