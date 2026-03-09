@@ -135,7 +135,6 @@ const AdminProducts = () => {
                   </div>
                 </div>
                 <ImageDropZone value={form.image_url} onChange={(url) => setForm((f) => ({ ...f, image_url: url }))} folder="products" />
-                </div>
                 <div>
                   <label className="text-sm font-medium text-foreground">Description</label>
                   <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
