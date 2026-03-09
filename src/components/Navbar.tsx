@@ -22,6 +22,20 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
 
+  const { data: profile } = useQuery({
+    queryKey: ["navbar-profile", user?.id],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("display_name")
+        .eq("user_id", user!.id)
+        .single();
+      return data;
+    },
+    enabled: !!user,
+    staleTime: 60_000,
+  });
+
   const { data: dynamicPages } = useQuery({
     queryKey: ["navbar-pages"],
     queryFn: async () => {
@@ -39,6 +53,9 @@ const Navbar = () => {
     ...staticLinks,
     ...(dynamicPages || []).map((p) => ({ to: `/page/${p.slug}`, label: p.title })),
   ];
+
+  const displayName = profile?.display_name || user?.user_metadata?.display_name;
+  const patientLabel = user && displayName ? `Espace ${displayName}` : "Espace Patient";
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -79,7 +96,7 @@ const Navbar = () => {
             className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
           >
             <LayoutDashboard className="h-4 w-4" />
-            Espace Patient
+            {patientLabel}
           </Link>
           {user && (
             <button
@@ -135,7 +152,7 @@ const Navbar = () => {
             className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
           >
             <LayoutDashboard className="h-4 w-4" />
-            Espace Patient
+            {patientLabel}
           </Link>
           {user && (
             <button
