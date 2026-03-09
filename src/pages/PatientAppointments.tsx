@@ -24,6 +24,7 @@ interface Appointment {
   time: string;
   type: string;
   status: string;
+  provider_type: string | null;
 }
 
 const PatientAppointments = () => {
@@ -31,7 +32,7 @@ const PatientAppointments = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ date: "", time: "", type: "" });
+  const [form, setForm] = useState({ date: "", time: "", type: "", provider_type: "" });
   const [submitting, setSubmitting] = useState(false);
 
   const fetchAppointments = async () => {
