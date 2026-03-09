@@ -2,18 +2,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle, User } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
-
-interface StaffOption {
-  user_id: string;
-  role: string;
-  display_name: string | null;
-}
 
 interface Appointment {
   id: string;
@@ -21,8 +14,6 @@ interface Appointment {
   time: string;
   type: string;
   status: string;
-  staff_id: string | null;
-  staff_name?: string;
 }
 
 const PatientAppointments = () => {
@@ -30,38 +21,8 @@ const PatientAppointments = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ date: "", time: "", type: "", staff_id: "" });
+  const [form, setForm] = useState({ date: "", time: "", type: "" });
   const [submitting, setSubmitting] = useState(false);
-  const [staffOptions, setStaffOptions] = useState<StaffOption[]>([]);
-
-  const ROLE_LABELS: Record<string, string> = {
-    medecin: "Médecin",
-    infirmier_diplome: "Infirmier(e) diplômé(e)",
-    sage_femme: "Sage-femme",
-    technicien_labo: "Technicien labo",
-    infirmier_auxiliaire: "Infirmier(e) auxiliaire",
-    accoucheuse_auxiliaire: "Accoucheuse auxiliaire",
-  };
-
-  const fetchStaff = async () => {
-    const { data: staff } = await supabase
-      .from("staff_members")
-      .select("user_id, role")
-      .eq("approved", true);
-    if (!staff) return;
-
-    const userIds = staff.map((s) => s.user_id);
-    const { data: profiles } = await supabase
-      .from("profiles")
-      .select("user_id, display_name")
-      .in("user_id", userIds);
-
-    const options: StaffOption[] = staff.map((s) => ({
-      ...s,
-      display_name: profiles?.find((p) => p.user_id === s.user_id)?.display_name || null,
-    }));
-    setStaffOptions(options);
-  };
 
   const fetchAppointments = async () => {
     if (!user) return;
@@ -70,58 +31,31 @@ const PatientAppointments = () => {
       .select("*")
       .eq("user_id", user.id)
       .order("date", { ascending: true });
-
-    if (data) {
-      // Fetch staff names for appointments with staff_id
-      const staffIds = data.filter((a) => a.staff_id).map((a) => a.staff_id!);
-      let staffProfiles: Record<string, string> = {};
-      if (staffIds.length > 0) {
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, display_name")
-          .in("user_id", staffIds);
-        if (profiles) {
-          profiles.forEach((p) => {
-            staffProfiles[p.user_id] = p.display_name || "Prestataire";
-          });
-        }
-      }
-      setAppointments(
-        data.map((a) => ({
-          ...a,
-          staff_name: a.staff_id ? staffProfiles[a.staff_id] || "Prestataire" : undefined,
-        }))
-      );
-    } else {
-      setAppointments([]);
-    }
+    setAppointments(data || []);
     setLoading(false);
   };
 
   useEffect(() => {
     fetchAppointments();
-    fetchStaff();
   }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
     setSubmitting(true);
-    const insertData: any = {
+    const { error } = await supabase.from("appointments").insert({
       user_id: user.id,
       date: form.date,
       time: form.time,
       type: form.type,
-    };
-    if (form.staff_id) insertData.staff_id = form.staff_id;
-    const { error } = await supabase.from("appointments").insert(insertData);
+    });
     setSubmitting(false);
     if (error) {
       toast({ title: "Erreur", description: "Impossible de créer le rendez-vous.", variant: "destructive" });
     } else {
       toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
       setOpen(false);
-      setForm({ date: "", time: "", type: "", staff_id: "" });
+      setForm({ date: "", time: "", type: "" });
       fetchAppointments();
     }
   };
@@ -168,21 +102,6 @@ const PatientAppointments = () => {
                   <label className="text-sm font-medium text-foreground">Type de soin</label>
                   <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Prise de sang, Pansement..." required />
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Prestataire</label>
-                  <Select value={form.staff_id} onValueChange={(val) => setForm({ ...form, staff_id: val })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choisir un prestataire (optionnel)" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {staffOptions.map((s) => (
-                        <SelectItem key={s.user_id} value={s.user_id}>
-                          {s.display_name || "Sans nom"} — {ROLE_LABELS[s.role] || s.role}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-medium text-foreground">Date</label>
@@ -217,11 +136,6 @@ const PatientAppointments = () => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-card-foreground text-sm">{appt.type}</p>
-                  {appt.staff_name && (
-                    <p className="text-muted-foreground text-xs mt-0.5 flex items-center gap-1">
-                      <User className="h-3 w-3" /> {appt.staff_name}
-                    </p>
-                  )}
                   <p className="text-muted-foreground text-xs mt-0.5">
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
