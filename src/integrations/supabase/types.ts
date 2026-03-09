@@ -19,6 +19,7 @@ export type Database = {
           created_at: string
           date: string
           id: string
+          provider_type: string | null
           staff_id: string | null
           status: string
           time: string
@@ -29,6 +30,7 @@ export type Database = {
           created_at?: string
           date: string
           id?: string
+          provider_type?: string | null
           staff_id?: string | null
           status?: string
           time: string
@@ -39,6 +41,7 @@ export type Database = {
           created_at?: string
           date?: string
           id?: string
+          provider_type?: string | null
           staff_id?: string | null
           status?: string
           time?: string
