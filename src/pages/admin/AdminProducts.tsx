@@ -23,6 +23,7 @@ const emptyForm = { name: "", description: "", price: "0", category: "", image_u
 const AdminProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(emptyForm);
@@ -117,64 +118,73 @@ const AdminProducts = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <h1 className="font-display text-2xl font-bold text-foreground">Produits</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button size="sm" onClick={openCreate}><Plus className="h-4 w-4 mr-1" /> Nouveau produit</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>{editing ? "Modifier le produit" : "Nouveau produit"}</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-              <div>
-                <label className="text-sm font-medium text-foreground">Nom</label>
-                <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
+        <div className="flex items-center gap-2">
+          <div className="flex items-center bg-muted rounded-lg p-0.5 text-sm">
+            {([["all", "Tous"], ["published", "Publiés"], ["draft", "Brouillons"]] as const).map(([key, label]) => (
+              <button key={key} onClick={() => setFilter(key)} className={`px-3 py-1.5 rounded-md transition-colors ${filter === key ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>{label}</button>
+            ))}
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" onClick={openCreate}><Plus className="h-4 w-4 mr-1" /> Nouveau produit</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{editing ? "Modifier le produit" : "Nouveau produit"}</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 <div>
-                  <label className="text-sm font-medium text-foreground">Prix (FCFA)</label>
-                  <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+                  <label className="text-sm font-medium text-foreground">Nom</label>
+                  <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Prix (FCFA)</label>
+                    <Input type="number" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-foreground">Catégorie</label>
+                    <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+                  </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-foreground">Catégorie</label>
-                  <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+                  <label className="text-sm font-medium text-foreground">Image à la Une</label>
+                  <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="hidden" />
+                  <div className="mt-1">
+                    {form.image_url && (
+                      <img src={form.image_url} alt="Aperçu" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
+                    )}
+                    <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
+                      {uploading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4 mr-1" /> {form.image_url ? "Changer l'image" : "Télécharger une image"}</>}
+                    </Button>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Image à la Une</label>
-                <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="hidden" />
-                <div className="mt-1">
-                  {form.image_url && (
-                    <img src={form.image_url} alt="Aperçu" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
-                  )}
-                  <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-                    {uploading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4 mr-1" /> {form.image_url ? "Changer l'image" : "Télécharger une image"}</>}
-                  </Button>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Description</label>
+                  <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
                 </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Description</label>
-                <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" checked={form.in_stock} onChange={(e) => setForm({ ...form, in_stock: e.target.checked })} id="in_stock" />
-                  <label htmlFor="in_stock" className="text-sm text-foreground">En stock</label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" checked={form.in_stock} onChange={(e) => setForm({ ...form, in_stock: e.target.checked })} id="in_stock" />
+                    <label htmlFor="in_stock" className="text-sm text-foreground">En stock</label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} id="published_prod" />
+                    <label htmlFor="published_prod" className="text-sm text-foreground">Publié</label>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} id="published_prod" />
-                  <label htmlFor="published_prod" className="text-sm text-foreground">Publié</label>
-                </div>
-              </div>
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? "Enregistrement..." : editing ? "Enregistrer" : "Créer"}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <Button type="submit" className="w-full" disabled={submitting}>
+                  {submitting ? "Enregistrement..." : editing ? "Enregistrer" : "Créer"}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
+
+
 
       {loading ? (
         <p className="text-muted-foreground animate-pulse">Chargement...</p>
@@ -193,7 +203,7 @@ const AdminProducts = () => {
               </tr>
             </thead>
             <tbody>
-              {products.map((p) => (
+              {products.filter(p => filter === "all" ? true : filter === "published" ? p.published : !p.published).map((p) => (
                 <tr key={p.id} className="border-b border-border last:border-0">
                   <td className="p-4 text-card-foreground font-medium">{p.name}</td>
                   <td className="p-4 text-muted-foreground hidden sm:table-cell">{p.price.toLocaleString()} FCFA</td>
