@@ -183,13 +183,8 @@ const AdminProducts = () => {
           </Dialog>
         </div>
       </div>
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? "Enregistrement..." : editing ? "Enregistrer" : "Créer"}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+
+
 
       {loading ? (
         <p className="text-muted-foreground animate-pulse">Chargement...</p>

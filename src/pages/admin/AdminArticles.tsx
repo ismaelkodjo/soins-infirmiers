@@ -188,25 +188,8 @@ const AdminArticles = () => {
           </Dialog>
         </div>
       </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Extrait</label>
-                <Textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} rows={2} required />
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Contenu (paragraphes séparés par une ligne vide)</label>
-                <Textarea value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} rows={8} required />
-              </div>
-              <div className="flex items-center gap-2">
-                <input type="checkbox" checked={form.published} onChange={(e) => setForm({ ...form, published: e.target.checked })} id="published" />
-                <label htmlFor="published" className="text-sm text-foreground">Publié</label>
-              </div>
-              <Button type="submit" className="w-full" disabled={submitting}>
-                {submitting ? "Enregistrement..." : editing ? "Enregistrer" : "Créer"}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
-      </div>
+
+
 
       {loading ? (
         <p className="text-muted-foreground animate-pulse">Chargement...</p>
