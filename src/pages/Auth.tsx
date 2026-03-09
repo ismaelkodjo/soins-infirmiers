@@ -144,9 +144,25 @@ const Auth = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="••••••••"
-                  minLength={6}
+                  minLength={8}
                 />
               </div>
+              {!isLogin && password.length > 0 && (
+                <ul className="mt-2 space-y-1">
+                  {rulesStatus.map((rule) => (
+                    <li key={rule.label} className="flex items-center gap-1.5 text-xs">
+                      {rule.valid ? (
+                        <Check className="h-3.5 w-3.5 text-primary" />
+                      ) : (
+                        <X className="h-3.5 w-3.5 text-destructive" />
+                      )}
+                      <span className={rule.valid ? "text-primary" : "text-muted-foreground"}>
+                        {rule.label}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           )}
 
