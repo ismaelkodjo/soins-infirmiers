@@ -168,6 +168,21 @@ const PatientAppointments = () => {
                   <label className="text-sm font-medium text-foreground">Type de soin</label>
                   <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Prise de sang, Pansement..." required />
                 </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Prestataire</label>
+                  <Select value={form.staff_id} onValueChange={(val) => setForm({ ...form, staff_id: val })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choisir un prestataire (optionnel)" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {staffOptions.map((s) => (
+                        <SelectItem key={s.user_id} value={s.user_id}>
+                          {s.display_name || "Sans nom"} — {ROLE_LABELS[s.role] || s.role}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-sm font-medium text-foreground">Date</label>
