@@ -141,7 +141,8 @@ const AdminArticles = () => {
               <div>
                 <label className="text-sm font-medium text-foreground">Titre</label>
                 <Input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-              </div>
+        </div>
+      </div>
               <div>
                 <label className="text-sm font-medium text-foreground">Slug</label>
                 <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="mon-article" required />
