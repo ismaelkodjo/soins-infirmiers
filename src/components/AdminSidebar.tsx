@@ -43,6 +43,18 @@ export function AdminSidebar() {
     refetchInterval: 30000,
   });
 
+  const { data: pendingStaffCount = 0 } = useQuery({
+    queryKey: ["admin-pending-staff-count"],
+    queryFn: async () => {
+      const { count } = await supabase
+        .from("staff_members")
+        .select("id", { count: "exact", head: true })
+        .eq("approved", false);
+      return count || 0;
+    },
+    refetchInterval: 30000,
+  });
+
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
@@ -64,6 +76,11 @@ export function AdminSidebar() {
                       {item.title === "Notifications" && unreadCount > 0 && (
                         <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold h-5 min-w-[20px] px-1">
                           {unreadCount}
+                        </span>
+                      )}
+                      {item.title === "Personnel" && pendingStaffCount > 0 && (
+                        <span className="ml-auto inline-flex items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold h-5 min-w-[20px] px-1">
+                          {pendingStaffCount}
                         </span>
                       )}
                     </NavLink>
