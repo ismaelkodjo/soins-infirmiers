@@ -2,11 +2,18 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle } from "lucide-react";
+import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
+
+interface StaffOption {
+  user_id: string;
+  role: string;
+  display_name: string | null;
+}
 
 interface Appointment {
   id: string;
@@ -14,6 +21,8 @@ interface Appointment {
   time: string;
   type: string;
   status: string;
+  staff_id: string | null;
+  staff_name?: string;
 }
 
 const PatientAppointments = () => {
