@@ -1,11 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Upload, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import ImageDropZone from "@/components/ImageDropZone";
 
 interface Product {
   id: string;
@@ -28,8 +29,6 @@ const AdminProducts = () => {
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(emptyForm);
   const [submitting, setSubmitting] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProducts = async () => {
     const { data } = await supabase.from("products").select("*").order("created_at", { ascending: false });
@@ -59,21 +58,7 @@ const AdminProducts = () => {
     setOpen(true);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `products/${Date.now()}.${ext}`;
-    const { error } = await supabase.storage.from("blog-images").upload(path, file);
-    if (error) {
-      toast({ title: "Erreur upload", description: error.message, variant: "destructive" });
-    } else {
-      const { data: urlData } = supabase.storage.from("blog-images").getPublicUrl(path);
-      setForm((f) => ({ ...f, image_url: urlData.publicUrl }));
-    }
-    setUploading(false);
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,18 +134,7 @@ const AdminProducts = () => {
                     <Input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
                   </div>
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Image à la Une</label>
-                  <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageUpload} className="hidden" />
-                  <div className="mt-1">
-                    {form.image_url && (
-                      <img src={form.image_url} alt="Aperçu" className="w-full h-32 object-cover rounded-lg mb-2 border border-border" />
-                    )}
-                    <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-                      {uploading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" /> Upload...</> : <><Upload className="h-4 w-4 mr-1" /> {form.image_url ? "Changer l'image" : "Télécharger une image"}</>}
-                    </Button>
-                  </div>
-                </div>
+                <ImageDropZone value={form.image_url} onChange={(url) => setForm((f) => ({ ...f, image_url: url }))} folder="products" />
                 <div>
                   <label className="text-sm font-medium text-foreground">Description</label>
                   <Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} />
