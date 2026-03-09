@@ -9,13 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
-const PROVIDER_TYPES = [
-  { value: "medecin", label: "Médecin" },
-  { value: "infirmier_diplome", label: "Infirmier diplômé d'État" },
-  { value: "sage_femme", label: "Sage-femme d'État" },
-  { value: "technicien_labo", label: "Technicien supérieur de laboratoire" },
-  { value: "infirmier_auxiliaire", label: "Infirmier auxiliaire d'État" },
-  { value: "accoucheuse_auxiliaire", label: "Accoucheuse auxiliaire d'État" },
+const SERVICE_TYPES = [
+  { value: "medecine_generale", label: "Médecine générale" },
+  { value: "maternite", label: "Maternité" },
+  { value: "laboratoire", label: "Laboratoire" },
 ];
 
 interface Appointment {
