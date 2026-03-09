@@ -1,8 +1,15 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Heart, Mail, Lock, User, ArrowRight } from "lucide-react";
+import { Heart, Mail, Lock, User, ArrowRight, Check, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
+const passwordRules = [
+  { label: "8 caractères minimum", test: (p: string) => p.length >= 8 },
+  { label: "Une lettre majuscule", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "Un chiffre", test: (p: string) => /\d/.test(p) },
+  { label: "Un caractère spécial (!@#$...)", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
