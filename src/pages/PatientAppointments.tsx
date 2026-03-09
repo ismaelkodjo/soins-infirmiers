@@ -108,21 +108,21 @@ const PatientAppointments = () => {
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4 mt-2">
                 <div>
-                  <label className="text-sm font-medium text-foreground">Type de soin</label>
-                  <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Prise de sang, Pansement..." required />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Prestataire souhaité</label>
+                  <label className="text-sm font-medium text-foreground">Service</label>
                   <Select value={form.provider_type} onValueChange={(val) => setForm({ ...form, provider_type: val })}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Choisir un type de prestataire" />
+                      <SelectValue placeholder="Choisir un service" />
                     </SelectTrigger>
                     <SelectContent>
-                      {PROVIDER_TYPES.map((p) => (
-                        <SelectItem key={p.value} value={p.value}>{p.label}</SelectItem>
+                      {SERVICE_TYPES.map((s) => (
+                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-foreground">Motif</label>
+                  <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Consultation, Prise de sang..." required />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
