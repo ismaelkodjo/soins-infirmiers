@@ -2,12 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Calendar, Clock, Plus, Check, XCircle, UserRound } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { toast } from "@/hooks/use-toast";
+import { ArrowLeft, Calendar, Clock, UserRound, Info } from "lucide-react";
 
 const SERVICE_TYPES = [
   { value: "medecine_generale", label: "Médecine générale" },
@@ -28,60 +23,19 @@ const PatientAppointments = () => {
   const { user } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ date: "", time: "", type: "", provider_type: "" });
-  const [submitting, setSubmitting] = useState(false);
 
-  const fetchAppointments = async () => {
+  useEffect(() => {
     if (!user) return;
-    const { data } = await supabase
+    supabase
       .from("appointments")
       .select("*")
       .eq("user_id", user.id)
-      .order("date", { ascending: true });
-    setAppointments(data || []);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    fetchAppointments();
+      .order("date", { ascending: true })
+      .then(({ data }) => {
+        setAppointments(data || []);
+        setLoading(false);
+      });
   }, [user]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) return;
-    setSubmitting(true);
-    const { error } = await supabase.from("appointments").insert({
-      user_id: user.id,
-      date: form.date,
-      time: form.time,
-      type: form.type,
-      provider_type: form.provider_type || null,
-    } as any);
-    setSubmitting(false);
-    if (error) {
-      toast({ title: "Erreur", description: "Impossible de créer le rendez-vous.", variant: "destructive" });
-    } else {
-      toast({ title: "Rendez-vous demandé", description: "Votre demande a bien été enregistrée." });
-      setOpen(false);
-      setForm({ date: "", time: "", type: "", provider_type: "" });
-      fetchAppointments();
-    }
-  };
-
-  const updateStatus = async (id: string, status: string) => {
-    const { error } = await supabase
-      .from("appointments")
-      .update({ status })
-      .eq("id", id)
-      .eq("user_id", user!.id);
-    if (error) {
-      toast({ title: "Erreur", description: "Impossible de mettre à jour le statut.", variant: "destructive" });
-    } else {
-      toast({ title: "Statut mis à jour", description: `Rendez-vous ${status}.` });
-      fetchAppointments();
-    }
-  };
 
   const statusColor = (status: string) => {
     if (status === "confirmé") return "bg-green-100 text-green-700";
@@ -96,50 +50,11 @@ const PatientAppointments = () => {
           <ArrowLeft className="h-4 w-4" /> Retour au tableau de bord
         </Link>
 
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="font-display text-2xl font-bold text-foreground">Mes rendez-vous</h1>
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Demander un RDV</Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Demander un rendez-vous</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-                <div>
-                  <label className="text-sm font-medium text-foreground">Service</label>
-                  <Select value={form.provider_type} onValueChange={(val) => setForm({ ...form, provider_type: val })}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choisir un service" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {SERVICE_TYPES.map((s) => (
-                        <SelectItem key={s.value} value={s.value}>{s.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Motif</label>
-                  <Input value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} placeholder="Ex: Consultation, Prise de sang..." required />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-sm font-medium text-foreground">Date</label>
-                    <Input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} required />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground">Heure</label>
-                    <Input type="time" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} required />
-                  </div>
-                </div>
-                <Button type="submit" className="w-full" disabled={submitting}>
-                  {submitting ? "Envoi..." : "Envoyer la demande"}
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+        <h1 className="font-display text-2xl font-bold text-foreground mb-4">Mes rendez-vous</h1>
+
+        <div className="flex items-center gap-2 bg-muted/50 border border-border rounded-lg px-4 py-3 mb-8 text-sm text-muted-foreground">
+          <Info className="h-4 w-4 shrink-0" />
+          Vos rendez-vous sont planifiés par le personnel médical.
         </div>
 
         {loading ? (
@@ -168,21 +83,9 @@ const PatientAppointments = () => {
                     {new Date(appt.date).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })} à {appt.time.slice(0, 5)}
                   </p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
-                  <span className={`text-xs font-medium px-3 py-1 rounded-full ${statusColor(appt.status)}`}>
-                    {appt.status}
-                  </span>
-                  {appt.status === "à venir" && (
-                    <>
-                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-green-600 border-green-200 hover:bg-green-50" onClick={() => updateStatus(appt.id, "confirmé")}>
-                        <Check className="h-3.5 w-3.5" /> Confirmer
-                      </Button>
-                      <Button size="sm" variant="outline" className="h-8 text-xs gap-1 text-destructive border-destructive/20 hover:bg-destructive/5" onClick={() => updateStatus(appt.id, "annulé")}>
-                        <XCircle className="h-3.5 w-3.5" /> Annuler
-                      </Button>
-                    </>
-                  )}
-                </div>
+                <span className={`text-xs font-medium px-3 py-1 rounded-full shrink-0 ${statusColor(appt.status)}`}>
+                  {appt.status}
+                </span>
               </div>
             ))}
           </div>
