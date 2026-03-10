@@ -40,6 +40,17 @@ const StaffHome = () => {
                 Consulter et gérer les rendez-vous patients
               </p>
             </Link>
+
+            <Link
+              to="/staff/patients"
+              className="bg-card border border-border rounded-xl p-6 hover:shadow-card transition-shadow group"
+            >
+              <Users className="h-8 w-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-display font-semibold text-foreground mb-1">Patients confirmés</h3>
+              <p className="text-sm text-muted-foreground">
+                Voir les patients avec rendez-vous confirmés et bilans demandés
+              </p>
+            </Link>
           </>
         )}
 

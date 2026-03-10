@@ -48,6 +48,10 @@ const StaffDashboard = () => {
                 <Calendar className="h-4 w-4" />
                 Rendez-vous
               </NavLink>
+              <NavLink to="/staff/patients" className={linkClass}>
+                <Users className="h-4 w-4" />
+                Patients confirmés
+              </NavLink>
             </>
           )}
 

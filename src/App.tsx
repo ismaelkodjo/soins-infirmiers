@@ -58,6 +58,7 @@ const AppShell = () => {
           <Route path="ordonnances" element={<StaffOrdonnances />} />
           <Route path="rendez-vous" element={<StaffAppointments />} />
           <Route path="resultats" element={<StaffLabResults />} />
+          <Route path="patients" element={<StaffPatients />} />
         </Route>
       </Routes>
     );
