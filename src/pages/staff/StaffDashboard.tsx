@@ -1,7 +1,7 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
-import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope } from "lucide-react";
+import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users } from "lucide-react";
 
 const StaffDashboard = () => {
   const { signOut } = useAuth();
