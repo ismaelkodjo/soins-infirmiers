@@ -36,6 +36,7 @@ import StaffHome from "./pages/staff/StaffHome";
 import StaffOrdonnances from "./pages/staff/StaffOrdonnances";
 import StaffAppointments from "./pages/staff/StaffAppointments";
 import StaffLabResults from "./pages/staff/StaffLabResults";
+import StaffPatients from "./pages/staff/StaffPatients";
 import DynamicPage from "./pages/DynamicPage";
 import NotFound from "./pages/NotFound";
 
@@ -57,6 +58,7 @@ const AppShell = () => {
           <Route path="ordonnances" element={<StaffOrdonnances />} />
           <Route path="rendez-vous" element={<StaffAppointments />} />
           <Route path="resultats" element={<StaffLabResults />} />
+          <Route path="patients" element={<StaffPatients />} />
         </Route>
       </Routes>
     );

@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
-import { Calendar, FileText, FlaskConical } from "lucide-react";
+import { Calendar, FileText, FlaskConical, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const StaffHome = () => {
@@ -38,6 +38,17 @@ const StaffHome = () => {
               <h3 className="font-display font-semibold text-foreground mb-1">Rendez-vous</h3>
               <p className="text-sm text-muted-foreground">
                 Consulter et gérer les rendez-vous patients
+              </p>
+            </Link>
+
+            <Link
+              to="/staff/patients"
+              className="bg-card border border-border rounded-xl p-6 hover:shadow-card transition-shadow group"
+            >
+              <Users className="h-8 w-8 text-primary mb-3 group-hover:scale-110 transition-transform" />
+              <h3 className="font-display font-semibold text-foreground mb-1">Patients confirmés</h3>
+              <p className="text-sm text-muted-foreground">
+                Voir les patients avec rendez-vous confirmés et bilans demandés
               </p>
             </Link>
           </>
