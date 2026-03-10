@@ -1,6 +1,6 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
-import { Calendar, FileText, FlaskConical } from "lucide-react";
+import { Calendar, FileText, FlaskConical, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const StaffHome = () => {
