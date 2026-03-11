@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users, Bell, UserCog } from "lucide-react";
+import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users, Bell, UserCog, Pill } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
