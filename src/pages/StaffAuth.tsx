@@ -19,6 +19,7 @@ const STAFF_ROLES: StaffRole[] = [
   "technicien_labo",
   "infirmier_auxiliaire",
   "accoucheuse_auxiliaire",
+  "pharmacien",
 ];
 
 const StaffAuth = () => {

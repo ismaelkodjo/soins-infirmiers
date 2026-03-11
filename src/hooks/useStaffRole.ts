@@ -73,6 +73,7 @@ export const useStaffRole = () => {
 
   const isMedicalStaff = role ? MEDICAL_ROLES.includes(role) : false;
   const isLabTech = role === "technicien_labo";
+  const isPharmacist = role === "pharmacien";
 
-  return { role, approved, loading, isMedicalStaff, isLabTech };
+  return { role, approved, loading, isMedicalStaff, isLabTech, isPharmacist };
 };
