@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users, Bell, UserCog } from "lucide-react";
+import { LayoutDashboard, FileText, ShoppingBag, MessageSquare, ArrowLeft, FilePlus2, Users, Bell, UserCog, Pill } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ const items = [
   { title: "Messages", url: "/admin/messages", icon: MessageSquare },
   { title: "Patients", url: "/admin/patients", icon: Users },
   { title: "Personnel", url: "/admin/personnel", icon: UserCog },
+  { title: "Pharmacie", url: "/admin/pharmacie", icon: Pill },
   { title: "Notifications", url: "/admin/notifications", icon: Bell },
 ];
 

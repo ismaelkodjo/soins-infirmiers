@@ -314,6 +314,84 @@ export type Database = {
         }
         Relationships: []
       }
+      pharmacy_items: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: string
+          min_stock: number
+          name: string
+          price: number
+          quantity: number
+          unit: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          min_stock?: number
+          name: string
+          price?: number
+          quantity?: number
+          unit?: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          min_stock?: number
+          name?: string
+          price?: number
+          quantity?: number
+          unit?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pharmacy_queue: {
+        Row: {
+          created_at: string
+          id: string
+          items: string[]
+          notes: string | null
+          patient_id: string
+          patient_name: string
+          source_id: string | null
+          source_type: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          items?: string[]
+          notes?: string | null
+          patient_id: string
+          patient_name?: string
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          items?: string[]
+          notes?: string | null
+          patient_id?: string
+          patient_name?: string
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string
