@@ -191,6 +191,22 @@ const StaffHome = () => {
             </div>
           </CardContent>
         </Card>
+
+        {isPharmacist && (
+          <Link to="/staff/pharmacie">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer border-primary/20">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Pharmacie en attente</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.pharmPending ?? "—"}</p>
+                  </div>
+                  <Pill className="h-10 w-10 text-primary opacity-80" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
       </div>
 
       {/* Tables grid */}
