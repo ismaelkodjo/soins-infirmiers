@@ -5,7 +5,7 @@ import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users, Pil
 
 const StaffDashboard = () => {
   const { signOut } = useAuth();
-  const { role, isMedicalStaff, isLabTech } = useStaffRole();
+  const { role, isMedicalStaff, isLabTech, isPharmacist } = useStaffRole();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
