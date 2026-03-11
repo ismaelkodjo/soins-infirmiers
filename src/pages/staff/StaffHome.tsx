@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, FileText, FlaskConical, Users, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Calendar, FileText, FlaskConical, Users, Clock, CheckCircle, AlertCircle, Pill } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
