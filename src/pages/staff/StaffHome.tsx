@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
-import { Calendar, FileText, FlaskConical, Users, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Calendar, FileText, FlaskConical, Users, Clock, CheckCircle, AlertCircle, Pill } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ const getServiceForRole = (role: string | null): string | null => {
 
 const StaffHome = () => {
   const { user } = useAuth();
-  const { role, isMedicalStaff, isLabTech } = useStaffRole();
+  const { role, isMedicalStaff, isLabTech, isPharmacist } = useStaffRole();
   const serviceFilter = getServiceForRole(role);
 
   // Stats: confirmed patients
@@ -103,7 +103,7 @@ const StaffHome = () => {
 
   // Counts
   const { data: counts } = useQuery({
-    queryKey: ["dashboard-counts", serviceFilter],
+    queryKey: ["dashboard-counts", serviceFilter, isPharmacist],
     queryFn: async () => {
       let aptQuery = supabase.from("appointments").select("id", { count: "exact", head: true }).eq("status", "confirmé");
       if (serviceFilter) aptQuery = aptQuery.eq("provider_type", serviceFilter);
@@ -113,11 +113,14 @@ const StaffHome = () => {
       const { count: labCount } = await supabase.from("lab_results").select("id", { count: "exact", head: true });
       const { count: labPendingCount } = await supabase.from("lab_results").select("id", { count: "exact", head: true }).eq("status", "en attente");
 
+      const { count: pharmPending } = await supabase.from("pharmacy_queue").select("id", { count: "exact", head: true }).eq("status", "en attente");
+
       return {
         patients: patientsCount || 0,
         ordonnances: ordoCount || 0,
         labResults: labCount || 0,
         labPending: labPendingCount || 0,
+        pharmPending: pharmPending || 0,
       };
     },
   });
@@ -188,6 +191,22 @@ const StaffHome = () => {
             </div>
           </CardContent>
         </Card>
+
+        {isPharmacist && (
+          <Link to="/staff/pharmacie">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer border-primary/20">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Pharmacie en attente</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.pharmPending ?? "—"}</p>
+                  </div>
+                  <Pill className="h-10 w-10 text-primary opacity-80" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
       </div>
 
       {/* Tables grid */}

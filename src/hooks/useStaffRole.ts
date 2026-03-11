@@ -8,7 +8,8 @@ export type StaffRole =
   | "sage_femme"
   | "technicien_labo"
   | "infirmier_auxiliaire"
-  | "accoucheuse_auxiliaire";
+  | "accoucheuse_auxiliaire"
+  | "pharmacien";
 
 const MEDICAL_ROLES: StaffRole[] = [
   "medecin",
@@ -25,6 +26,7 @@ export const ROLE_LABELS: Record<StaffRole, string> = {
   technicien_labo: "Technicien supérieur de laboratoire",
   infirmier_auxiliaire: "Infirmier(e) auxiliaire d'État",
   accoucheuse_auxiliaire: "Accoucheuse auxiliaire d'État",
+  pharmacien: "Gérant(e) de pharmacie",
 };
 
 export const useStaffRole = () => {
@@ -71,6 +73,7 @@ export const useStaffRole = () => {
 
   const isMedicalStaff = role ? MEDICAL_ROLES.includes(role) : false;
   const isLabTech = role === "technicien_labo";
+  const isPharmacist = role === "pharmacien";
 
-  return { role, approved, loading, isMedicalStaff, isLabTech };
+  return { role, approved, loading, isMedicalStaff, isLabTech, isPharmacist };
 };

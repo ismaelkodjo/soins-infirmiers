@@ -1,11 +1,11 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
-import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users } from "lucide-react";
+import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users, Pill } from "lucide-react";
 
 const StaffDashboard = () => {
   const { signOut } = useAuth();
-  const { role, isMedicalStaff, isLabTech } = useStaffRole();
+  const { role, isMedicalStaff, isLabTech, isPharmacist } = useStaffRole();
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -59,6 +59,13 @@ const StaffDashboard = () => {
             <NavLink to="/staff/resultats" className={linkClass}>
               <FlaskConical className="h-4 w-4" />
               Résultats labo
+            </NavLink>
+          )}
+
+          {isPharmacist && (
+            <NavLink to="/staff/pharmacie" className={linkClass}>
+              <Pill className="h-4 w-4" />
+              Pharmacie
             </NavLink>
           )}
         </nav>
