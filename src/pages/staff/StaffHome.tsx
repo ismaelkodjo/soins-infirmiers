@@ -24,7 +24,7 @@ const getServiceForRole = (role: string | null): string | null => {
 
 const StaffHome = () => {
   const { user } = useAuth();
-  const { role, isMedicalStaff, isLabTech } = useStaffRole();
+  const { role, isMedicalStaff, isLabTech, isPharmacist } = useStaffRole();
   const serviceFilter = getServiceForRole(role);
 
   // Stats: confirmed patients
