@@ -103,7 +103,7 @@ const StaffHome = () => {
 
   // Counts
   const { data: counts } = useQuery({
-    queryKey: ["dashboard-counts", serviceFilter],
+    queryKey: ["dashboard-counts", serviceFilter, isPharmacist],
     queryFn: async () => {
       let aptQuery = supabase.from("appointments").select("id", { count: "exact", head: true }).eq("status", "confirmé");
       if (serviceFilter) aptQuery = aptQuery.eq("provider_type", serviceFilter);
@@ -113,11 +113,14 @@ const StaffHome = () => {
       const { count: labCount } = await supabase.from("lab_results").select("id", { count: "exact", head: true });
       const { count: labPendingCount } = await supabase.from("lab_results").select("id", { count: "exact", head: true }).eq("status", "en attente");
 
+      const { count: pharmPending } = await supabase.from("pharmacy_queue").select("id", { count: "exact", head: true }).eq("status", "en attente");
+
       return {
         patients: patientsCount || 0,
         ordonnances: ordoCount || 0,
         labResults: labCount || 0,
         labPending: labPendingCount || 0,
+        pharmPending: pharmPending || 0,
       };
     },
   });
