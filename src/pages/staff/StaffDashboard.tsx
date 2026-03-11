@@ -61,6 +61,13 @@ const StaffDashboard = () => {
               Résultats labo
             </NavLink>
           )}
+
+          {isPharmacist && (
+            <NavLink to="/staff/pharmacie" className={linkClass}>
+              <Pill className="h-4 w-4" />
+              Pharmacie
+            </NavLink>
+          )}
         </nav>
 
         <button
