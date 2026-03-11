@@ -23,6 +23,7 @@ const items = [
   { title: "Messages", url: "/admin/messages", icon: MessageSquare },
   { title: "Patients", url: "/admin/patients", icon: Users },
   { title: "Personnel", url: "/admin/personnel", icon: UserCog },
+  { title: "Pharmacie", url: "/admin/pharmacie", icon: Pill },
   { title: "Notifications", url: "/admin/notifications", icon: Bell },
 ];
 
