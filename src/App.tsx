@@ -51,40 +51,50 @@ const AppShell = () => {
 
   if (isStaff) {
     return (
-      <Routes>
-        <Route
-          path="/staff"
-          element={<StaffProtectedRoute><StaffDashboard /></StaffProtectedRoute>}
-        >
-          <Route index element={<StaffHome />} />
-          <Route path="ordonnances" element={<StaffOrdonnances />} />
-          <Route path="rendez-vous" element={<StaffAppointments />} />
-          <Route path="resultats" element={<StaffLabResults />} />
-          <Route path="patients" element={<StaffPatients />} />
-          <Route path="pharmacie" element={<StaffPharmacy />} />
-        </Route>
-      </Routes>
+      <>
+        <Navbar />
+        <div className="pt-16">
+          <Routes>
+            <Route
+              path="/staff"
+              element={<StaffProtectedRoute><StaffDashboard /></StaffProtectedRoute>}
+            >
+              <Route index element={<StaffHome />} />
+              <Route path="ordonnances" element={<StaffOrdonnances />} />
+              <Route path="rendez-vous" element={<StaffAppointments />} />
+              <Route path="resultats" element={<StaffLabResults />} />
+              <Route path="patients" element={<StaffPatients />} />
+              <Route path="pharmacie" element={<StaffPharmacy />} />
+            </Route>
+          </Routes>
+        </div>
+      </>
     );
   }
 
   if (isAdmin) {
     return (
-      <Routes>
-        <Route
-          path="/admin"
-          element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="articles" element={<AdminArticles />} />
-          <Route path="produits" element={<AdminProducts />} />
-          <Route path="messages" element={<AdminMessages />} />
-          <Route path="pages" element={<AdminPages />} />
-          <Route path="patients" element={<AdminPatients />} />
-          <Route path="personnel" element={<AdminStaff />} />
-          <Route path="pharmacie" element={<AdminPharmacy />} />
-          <Route path="notifications" element={<AdminNotifications />} />
-        </Route>
-      </Routes>
+      <>
+        <Navbar />
+        <div className="pt-16">
+          <Routes>
+            <Route
+              path="/admin"
+              element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="articles" element={<AdminArticles />} />
+              <Route path="produits" element={<AdminProducts />} />
+              <Route path="messages" element={<AdminMessages />} />
+              <Route path="pages" element={<AdminPages />} />
+              <Route path="patients" element={<AdminPatients />} />
+              <Route path="personnel" element={<AdminStaff />} />
+              <Route path="pharmacie" element={<AdminPharmacy />} />
+              <Route path="notifications" element={<AdminNotifications />} />
+            </Route>
+          </Routes>
+        </div>
+      </>
     );
   }
 
