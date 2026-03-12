@@ -21,7 +21,7 @@ const StaffProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   // Admins can access staff area directly
   if (isAdmin) return <>{children}</>;
 
-  if (!role) return <Navigate to="/staff-auth" replace />;
+  if (!role) return <Navigate to="/auth" replace />;
 
   if (!approved) {
     return (
