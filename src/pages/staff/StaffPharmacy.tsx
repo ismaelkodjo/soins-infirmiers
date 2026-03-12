@@ -67,6 +67,19 @@ const StaffPharmacy = () => {
     },
   });
 
+  // Fetch inventory
+  const { data: inventory, isLoading: loadingInventory } = useQuery({
+    queryKey: ["pharmacy-inventory"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("pharmacy_items")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) throw error;
+      return data;
+    },
+  });
+
   // Dispense mutation (mark as paid & dispensed)
   const dispenseMutation = useMutation({
     mutationFn: async (id: string) => {
