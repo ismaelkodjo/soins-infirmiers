@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Heart, Menu, X, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Heart, Menu, X, LogOut, LayoutDashboard, ShieldCheck, Stethoscope } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAdminCheck } from "@/hooks/useAdminCheck";
+import { useStaffRole } from "@/hooks/useStaffRole";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -13,7 +14,6 @@ const staticLinks = [
   { to: "/contact", label: "Contact" },
 ];
 
-// Slugs already handled by static routes
 const staticSlugs = ["accueil", "blog", "boutique", "contact", "auth", "reset-password", "espace-patient"];
 
 const Navbar = () => {
@@ -21,6 +21,7 @@ const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
+  const { role: staffRole, approved: staffApproved } = useStaffRole();
 
   const { data: profile } = useQuery({
     queryKey: ["navbar-profile", user?.id],
@@ -56,9 +57,26 @@ const Navbar = () => {
 
   const displayName = profile?.display_name || user?.user_metadata?.display_name;
   const truncatedName = displayName && displayName.length > 15 ? displayName.slice(0, 15) + "…" : displayName;
-  const patientLabel = user && truncatedName ? `Espace ${truncatedName}` : "Espace Patient";
 
   const isActive = (path: string) => location.pathname === path;
+  const isHome = location.pathname === "/";
+
+  // Determine which space button to show
+  const getSpaceButton = () => {
+    if (user && isAdmin) {
+      return { to: "/admin", label: "Espace Admin", icon: ShieldCheck };
+    }
+    if (user && staffRole && staffApproved) {
+      return { to: "/staff", label: "Espace Pro", icon: Stethoscope };
+    }
+    if (isHome) {
+      const patientLabel = user && truncatedName ? `Espace ${truncatedName}` : "Espace Patient";
+      return { to: "/espace-patient", label: patientLabel, icon: LayoutDashboard };
+    }
+    return null;
+  };
+
+  const spaceBtn = getSpaceButton();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-b border-border">
@@ -81,24 +99,15 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          {user && isAdmin && (
+          {spaceBtn && (
             <Link
-              to="/admin"
-              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-                location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
-              }`}
+              to={spaceBtn.to}
+              className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
             >
-              <ShieldCheck className="h-4 w-4" />
-              Admin
+              <spaceBtn.icon className="h-4 w-4" />
+              {spaceBtn.label}
             </Link>
           )}
-          <Link
-            to="/espace-patient"
-            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            {patientLabel}
-          </Link>
           {user && (
             <button
               onClick={signOut}
@@ -135,26 +144,16 @@ const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          {user && isAdmin && (
+          {spaceBtn && (
             <Link
-              to="/admin"
+              to={spaceBtn.to}
               onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-2 text-sm font-medium py-2 ${
-                location.pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
-              }`}
+              className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
             >
-              <ShieldCheck className="h-4 w-4" />
-              Admin
+              <spaceBtn.icon className="h-4 w-4" />
+              {spaceBtn.label}
             </Link>
           )}
-          <Link
-            to="/espace-patient"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-lg text-sm font-semibold justify-center"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            {patientLabel}
-          </Link>
           {user && (
             <button
               onClick={() => { signOut(); setMobileOpen(false); }}
