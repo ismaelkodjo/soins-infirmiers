@@ -266,6 +266,9 @@ const StaffPharmacy = () => {
           <TabsTrigger value="analyses" className="gap-1.5">
             <FlaskConical className="h-4 w-4" /> Analyses
           </TabsTrigger>
+          <TabsTrigger value="inventaire" className="gap-1.5">
+            <Package className="h-4 w-4" /> Inventaire
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="medicaments" className="mt-4">
@@ -293,6 +296,60 @@ const StaffPharmacy = () => {
                 <p className="text-sm text-muted-foreground animate-pulse text-center py-8">Chargement...</p>
               ) : (
                 renderQueue(labQueue, "lab")
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="inventaire" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Stock des médicaments et consommables</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {loadingInventory ? (
+                <p className="text-sm text-muted-foreground animate-pulse text-center py-8">Chargement...</p>
+              ) : !inventory?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-8">Aucun article en stock</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nom</TableHead>
+                      <TableHead>Catégorie</TableHead>
+                      <TableHead>Quantité</TableHead>
+                      <TableHead>Unité</TableHead>
+                      <TableHead>Prix</TableHead>
+                      <TableHead>Statut</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inventory.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="text-xs">
+                            {item.category === "medicament" ? "Médicament" : "Consommable"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{item.quantity}</TableCell>
+                        <TableCell className="text-sm">{item.unit}</TableCell>
+                        <TableCell className="text-sm">{item.price} FCFA</TableCell>
+                        <TableCell>
+                          {item.quantity <= item.min_stock ? (
+                            <Badge variant="destructive" className="text-xs gap-1">
+                              <AlertTriangle className="h-3 w-3" /> Stock bas
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 text-xs">
+                              En stock
+                            </Badge>
+                          )}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
               )}
             </CardContent>
           </Card>
