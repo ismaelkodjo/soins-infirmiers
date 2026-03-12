@@ -47,7 +47,7 @@ const queryClient = new QueryClient();
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
-  const isStaff = location.pathname.startsWith("/staff") && !location.pathname.startsWith("/staff-auth");
+  const isStaff = location.pathname.startsWith("/staff");
 
   if (isStaff) {
     return (
