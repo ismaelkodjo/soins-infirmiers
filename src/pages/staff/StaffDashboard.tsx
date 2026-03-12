@@ -10,7 +10,7 @@ const StaffDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/staff-auth");
+    navigate("/auth");
   };
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>

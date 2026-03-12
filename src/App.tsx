@@ -30,7 +30,7 @@ import AdminPatients from "./pages/admin/AdminPatients";
 import AdminNotifications from "./pages/admin/AdminNotifications";
 import AdminStaff from "./pages/admin/AdminStaff";
 import AdminPharmacy from "./pages/admin/AdminPharmacy";
-import StaffAuth from "./pages/StaffAuth";
+
 import StaffProtectedRoute from "./components/StaffProtectedRoute";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffHome from "./pages/staff/StaffHome";
@@ -47,7 +47,7 @@ const queryClient = new QueryClient();
 const AppShell = () => {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
-  const isStaff = location.pathname.startsWith("/staff") && !location.pathname.startsWith("/staff-auth");
+  const isStaff = location.pathname.startsWith("/staff");
 
   if (isStaff) {
     return (
@@ -108,7 +108,7 @@ const AppShell = () => {
         <Route path="/blog/:slug" element={<ArticleDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/auth" element={<Auth />} />
-        <Route path="/staff-auth" element={<StaffAuth />} />
+        
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/espace-patient" element={<ProtectedRoute><PatientDashboard /></ProtectedRoute>} />
         <Route path="/espace-patient/rendez-vous" element={<ProtectedRoute><PatientAppointments /></ProtectedRoute>} />
