@@ -21,7 +21,7 @@ const Blog = () => {
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           {isLoading ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="bg-card rounded-xl overflow-hidden shadow-card animate-pulse">
                   <div className="aspect-[4/3] bg-muted" />
