@@ -71,13 +71,12 @@ const StaffDashboard = () => {
           )}
         </nav>
 
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors mt-4"
-        >
-          <LogOut className="h-4 w-4" />
-          Déconnexion
-        </button>
+        <LogoutConfirmDialog onConfirm={handleSignOut}>
+          <button className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors mt-4 w-full">
+            <LogOut className="h-4 w-4" />
+            Déconnexion
+          </button>
+        </LogoutConfirmDialog>
       </aside>
 
       {/* Main content */}
