@@ -23,7 +23,13 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { role: staffRole, approved: staffApproved } = useStaffRole();
+  const navigate = useNavigate();
 
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileOpen(false);
+    navigate("/");
+  };
   const { data: profile } = useQuery({
     queryKey: ["navbar-profile", user?.id],
     queryFn: async () => {
