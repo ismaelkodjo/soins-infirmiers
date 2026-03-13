@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Heart, Mail, Lock, User, ArrowRight, Check, X, Eye, EyeOff, Stethoscope, ShieldCheck, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { ROLE_LABELS, type StaffRole } from "@/hooks/useStaffRole";
 
 type ProfileType = "patient" | "personnel" | "admin";
@@ -31,6 +32,7 @@ const profileTypes: { value: ProfileType; label: string; icon: typeof UserRound;
 ];
 
 const Auth = () => {
+  const { user, loading: authLoading } = useAuth();
   const [profileType, setProfileType] = useState<ProfileType>("patient");
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -43,6 +45,34 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (authLoading || !user) return;
+
+    const redirectUser = async () => {
+      // Check admin
+      const { data: isAdmin } = await supabase.rpc("has_role" as any, {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      if (isAdmin) { navigate("/admin", { replace: true }); return; }
+
+      // Check staff
+      const { data: staff } = await supabase
+        .from("staff_members")
+        .select("approved")
+        .eq("user_id", user.id)
+        .eq("approved", true)
+        .maybeSingle();
+      if (staff) { navigate("/staff", { replace: true }); return; }
+
+      // Default: patient
+      navigate("/espace-patient", { replace: true });
+    };
+
+    redirectUser();
+  }, [user, authLoading, navigate]);
 
   const rulesStatus = useMemo(
     () => passwordRules.map((r) => ({ ...r, valid: r.test(password) })),
@@ -146,6 +176,14 @@ const Auth = () => {
 
   const currentProfile = profileTypes.find((p) => p.value === profileType)!;
   const Icon = currentProfile.icon;
+
+  if (authLoading || user) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center bg-secondary">
+        <div className="text-muted-foreground animate-pulse">Chargement...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen pt-16 flex items-center justify-center bg-secondary">
