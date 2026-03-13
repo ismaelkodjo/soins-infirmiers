@@ -116,13 +116,12 @@ const Navbar = () => {
             </Link>
           )}
           {user && (
-            <button
-              onClick={signOut}
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              Déconnexion
-            </button>
+            <LogoutConfirmDialog onConfirm={handleSignOut}>
+              <button className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                <LogOut className="h-4 w-4" />
+                Déconnexion
+              </button>
+            </LogoutConfirmDialog>
           )}
         </div>
 
