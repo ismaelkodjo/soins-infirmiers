@@ -2,6 +2,7 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
 import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users, Pill } from "lucide-react";
+import LogoutConfirmDialog from "@/components/LogoutConfirmDialog";
 
 const StaffDashboard = () => {
   const { signOut } = useAuth();
@@ -10,7 +11,7 @@ const StaffDashboard = () => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -70,13 +71,12 @@ const StaffDashboard = () => {
           )}
         </nav>
 
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors mt-4"
-        >
-          <LogOut className="h-4 w-4" />
-          Déconnexion
-        </button>
+        <LogoutConfirmDialog onConfirm={handleSignOut}>
+          <button className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-destructive hover:bg-destructive/10 transition-colors mt-4 w-full">
+            <LogOut className="h-4 w-4" />
+            Déconnexion
+          </button>
+        </LogoutConfirmDialog>
       </aside>
 
       {/* Main content */}

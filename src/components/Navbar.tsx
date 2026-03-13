@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Heart, Menu, X, LogOut, LayoutDashboard, ShieldCheck, Stethoscope } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,6 +6,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useStaffRole } from "@/hooks/useStaffRole";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import LogoutConfirmDialog from "./LogoutConfirmDialog";
 
 const staticLinks = [
   { to: "/", label: "Accueil" },
@@ -22,7 +23,13 @@ const Navbar = () => {
   const { user, signOut } = useAuth();
   const { isAdmin } = useAdminCheck();
   const { role: staffRole, approved: staffApproved } = useStaffRole();
+  const navigate = useNavigate();
 
+  const handleSignOut = async () => {
+    await signOut();
+    setMobileOpen(false);
+    navigate("/");
+  };
   const { data: profile } = useQuery({
     queryKey: ["navbar-profile", user?.id],
     queryFn: async () => {
@@ -109,13 +116,12 @@ const Navbar = () => {
             </Link>
           )}
           {user && (
-            <button
-              onClick={signOut}
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              Déconnexion
-            </button>
+            <LogoutConfirmDialog onConfirm={handleSignOut}>
+              <button className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                <LogOut className="h-4 w-4" />
+                Déconnexion
+              </button>
+            </LogoutConfirmDialog>
           )}
         </div>
 
@@ -155,12 +161,11 @@ const Navbar = () => {
             </Link>
           )}
           {user && (
-            <button
-              onClick={() => { signOut(); setMobileOpen(false); }}
-              className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
-            >
-              Déconnexion
-            </button>
+            <LogoutConfirmDialog onConfirm={handleSignOut}>
+              <button className="block w-full text-left text-sm font-medium py-2 text-muted-foreground">
+                Déconnexion
+              </button>
+            </LogoutConfirmDialog>
           )}
         </div>
       )}
