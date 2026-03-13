@@ -76,7 +76,7 @@ const PatientDashboard = () => {
             </div>
           ) : (
             appointments.map((appt, i) => (
-              <div key={appt.id} className={`flex items-center gap-4 p-5 ${i < appointments.length - 1 ? "border-b border-border" : ""}`}>
+              <div key={appt.id} className={`flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-5 ${i < appointments.length - 1 ? "border-b border-border" : ""}`}>
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <Clock className="h-5 w-5 text-primary" />
                 </div>
