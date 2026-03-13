@@ -32,6 +32,7 @@ const profileTypes: { value: ProfileType; label: string; icon: typeof UserRound;
 ];
 
 const Auth = () => {
+  const { user, loading: authLoading } = useAuth();
   const [profileType, setProfileType] = useState<ProfileType>("patient");
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -44,6 +45,34 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (authLoading || !user) return;
+
+    const redirectUser = async () => {
+      // Check admin
+      const { data: isAdmin } = await supabase.rpc("has_role" as any, {
+        _user_id: user.id,
+        _role: "admin",
+      });
+      if (isAdmin) { navigate("/admin", { replace: true }); return; }
+
+      // Check staff
+      const { data: staff } = await supabase
+        .from("staff_members")
+        .select("approved")
+        .eq("user_id", user.id)
+        .eq("approved", true)
+        .maybeSingle();
+      if (staff) { navigate("/staff", { replace: true }); return; }
+
+      // Default: patient
+      navigate("/espace-patient", { replace: true });
+    };
+
+    redirectUser();
+  }, [user, authLoading, navigate]);
 
   const rulesStatus = useMemo(
     () => passwordRules.map((r) => ({ ...r, valid: r.test(password) })),
