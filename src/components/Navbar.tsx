@@ -161,12 +161,11 @@ const Navbar = () => {
             </Link>
           )}
           {user && (
-            <button
-              onClick={() => { signOut(); setMobileOpen(false); }}
-              className="block w-full text-left text-sm font-medium py-2 text-muted-foreground"
-            >
-              Déconnexion
-            </button>
+            <LogoutConfirmDialog onConfirm={handleSignOut}>
+              <button className="block w-full text-left text-sm font-medium py-2 text-muted-foreground">
+                Déconnexion
+              </button>
+            </LogoutConfirmDialog>
           )}
         </div>
       )}
