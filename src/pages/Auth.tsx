@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Heart, Mail, Lock, User, ArrowRight, Check, X, Eye, EyeOff, Stethoscope, ShieldCheck, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { ROLE_LABELS, type StaffRole } from "@/hooks/useStaffRole";
 
 type ProfileType = "patient" | "personnel" | "admin";
