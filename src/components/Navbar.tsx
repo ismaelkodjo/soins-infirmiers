@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Heart, Menu, X, LogOut, LayoutDashboard, ShieldCheck, Stethoscope } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -6,6 +6,7 @@ import { useAdminCheck } from "@/hooks/useAdminCheck";
 import { useStaffRole } from "@/hooks/useStaffRole";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import LogoutConfirmDialog from "./LogoutConfirmDialog";
 
 const staticLinks = [
   { to: "/", label: "Accueil" },
