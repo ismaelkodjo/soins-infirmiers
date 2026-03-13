@@ -34,7 +34,7 @@ const Blog = () => {
               ))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {articles.map((article) => (
                 <Link to={`/blog/${article.slug}`} key={article.slug} className="group">
                   <article className="bg-card rounded-xl overflow-hidden shadow-card hover:shadow-card-hover transition-shadow duration-300 flex flex-col h-full">
