@@ -177,6 +177,14 @@ const Auth = () => {
   const currentProfile = profileTypes.find((p) => p.value === profileType)!;
   const Icon = currentProfile.icon;
 
+  if (authLoading || user) {
+    return (
+      <div className="min-h-screen pt-16 flex items-center justify-center bg-secondary">
+        <div className="text-muted-foreground animate-pulse">Chargement...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-16 flex items-center justify-center bg-secondary">
       <div className="w-full max-w-md mx-4">
