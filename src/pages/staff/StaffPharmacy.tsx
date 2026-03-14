@@ -306,6 +306,9 @@ const StaffPharmacy = () => {
           <TabsTrigger value="inventaire" className="gap-1.5">
             <Package className="h-4 w-4" /> Inventaire
           </TabsTrigger>
+          <TabsTrigger value="ventes" className="gap-1.5">
+            <TrendingUp className="h-4 w-4" /> Ventes
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="medicaments" className="mt-4">
