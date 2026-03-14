@@ -295,7 +295,7 @@ const StaffHome = () => {
           </Card>
         )}
 
-        {/* Recent lab results - full width */}
+        {!isPharmacist && (
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Derniers résultats de laboratoire</CardTitle>
