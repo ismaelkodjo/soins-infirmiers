@@ -155,19 +155,21 @@ const StaffHome = () => {
           </Link>
         )}
 
-        <Link to="/staff/ordonnances">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Ordonnances</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.ordonnances ?? "—"}</p>
+        {!isLabTech && (
+          <Link to="/staff/ordonnances">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Ordonnances</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.ordonnances ?? "—"}</p>
+                  </div>
+                  <FileText className="h-10 w-10 text-primary opacity-80" />
                 </div>
-                <FileText className="h-10 w-10 text-primary opacity-80" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
 
         <Link to="/staff/resultats">
           <Card className="hover:shadow-card transition-shadow cursor-pointer">
