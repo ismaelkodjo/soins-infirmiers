@@ -30,6 +30,7 @@ const StaffHome = () => {
   // Stats: confirmed patients
   const { data: confirmedPatients } = useQuery({
     queryKey: ["dashboard-confirmed", serviceFilter],
+    enabled: !isLabTech,
     queryFn: async () => {
       let query = supabase
         .from("appointments")
@@ -56,7 +57,7 @@ const StaffHome = () => {
   // Stats: recent ordonnances
   const { data: recentOrdonnances } = useQuery({
     queryKey: ["dashboard-ordonnances"],
-    enabled: isMedicalStaff || isLabTech,
+    enabled: isMedicalStaff,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("ordonnances")
@@ -138,33 +139,37 @@ const StaffHome = () => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link to="/staff/patients">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Patients confirmés</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.patients ?? "—"}</p>
+        {!isLabTech && (
+          <Link to="/staff/patients">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Patients confirmés</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.patients ?? "—"}</p>
+                  </div>
+                  <Users className="h-10 w-10 text-primary opacity-80" />
                 </div>
-                <Users className="h-10 w-10 text-primary opacity-80" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
 
-        <Link to="/staff/ordonnances">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Ordonnances</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.ordonnances ?? "—"}</p>
+        {!isLabTech && (
+          <Link to="/staff/ordonnances">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Ordonnances</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.ordonnances ?? "—"}</p>
+                  </div>
+                  <FileText className="h-10 w-10 text-primary opacity-80" />
                 </div>
-                <FileText className="h-10 w-10 text-primary opacity-80" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
 
         <Link to="/staff/resultats">
           <Card className="hover:shadow-card transition-shadow cursor-pointer">
@@ -212,75 +217,79 @@ const StaffHome = () => {
       {/* Tables grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent confirmed patients */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base font-semibold">
-              Derniers patients confirmés
-              {serviceFilter && (
-                <Badge variant="secondary" className="ml-2 text-xs font-normal">
-                  {SERVICE_LABELS[serviceFilter]}
-                </Badge>
-              )}
-            </CardTitle>
-            <Link to="/staff/patients" className="text-xs text-primary hover:underline">Voir tout</Link>
-          </CardHeader>
-          <CardContent>
-            {!confirmedPatients?.length ? (
-              <p className="text-sm text-muted-foreground text-center py-4">Aucun patient confirmé</p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs">Patient</TableHead>
-                    <TableHead className="text-xs">Date</TableHead>
-                    <TableHead className="text-xs">Motif</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {confirmedPatients.map((p) => (
-                    <TableRow key={p.id}>
-                      <TableCell className="text-sm font-medium">{p.patient_name}</TableCell>
-                      <TableCell className="text-sm">{new Date(p.date).toLocaleDateString("fr-FR")}</TableCell>
-                      <TableCell className="text-sm">{p.type}</TableCell>
+        {!isLabTech && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-base font-semibold">
+                Derniers patients confirmés
+                {serviceFilter && (
+                  <Badge variant="secondary" className="ml-2 text-xs font-normal">
+                    {SERVICE_LABELS[serviceFilter]}
+                  </Badge>
+                )}
+              </CardTitle>
+              <Link to="/staff/patients" className="text-xs text-primary hover:underline">Voir tout</Link>
+            </CardHeader>
+            <CardContent>
+              {!confirmedPatients?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Aucun patient confirmé</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs">Patient</TableHead>
+                      <TableHead className="text-xs">Date</TableHead>
+                      <TableHead className="text-xs">Motif</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {confirmedPatients.map((p) => (
+                      <TableRow key={p.id}>
+                        <TableCell className="text-sm font-medium">{p.patient_name}</TableCell>
+                        <TableCell className="text-sm">{new Date(p.date).toLocaleDateString("fr-FR")}</TableCell>
+                        <TableCell className="text-sm">{p.type}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recent ordonnances */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-base font-semibold">Dernières ordonnances</CardTitle>
-            <Link to="/staff/ordonnances" className="text-xs text-primary hover:underline">Voir tout</Link>
-          </CardHeader>
-          <CardContent>
-            {!recentOrdonnances?.length ? (
-              <p className="text-sm text-muted-foreground text-center py-4">Aucune ordonnance</p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-xs">Patient</TableHead>
-                    <TableHead className="text-xs">Diagnostic</TableHead>
-                    <TableHead className="text-xs">Date</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {recentOrdonnances.map((o) => (
-                    <TableRow key={o.id}>
-                      <TableCell className="text-sm font-medium">{o.patient_name}</TableCell>
-                      <TableCell className="text-sm truncate max-w-[150px]">{o.diagnosis || "—"}</TableCell>
-                      <TableCell className="text-sm">{new Date(o.created_at).toLocaleDateString("fr-FR")}</TableCell>
+        {!isLabTech && (
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-base font-semibold">Dernières ordonnances</CardTitle>
+              <Link to="/staff/ordonnances" className="text-xs text-primary hover:underline">Voir tout</Link>
+            </CardHeader>
+            <CardContent>
+              {!recentOrdonnances?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-4">Aucune ordonnance</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="text-xs">Patient</TableHead>
+                      <TableHead className="text-xs">Diagnostic</TableHead>
+                      <TableHead className="text-xs">Date</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
+                  </TableHeader>
+                  <TableBody>
+                    {recentOrdonnances.map((o) => (
+                      <TableRow key={o.id}>
+                        <TableCell className="text-sm font-medium">{o.patient_name}</TableCell>
+                        <TableCell className="text-sm truncate max-w-[150px]">{o.diagnosis || "—"}</TableCell>
+                        <TableCell className="text-sm">{new Date(o.created_at).toLocaleDateString("fr-FR")}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Recent lab results - full width */}
         <Card className="lg:col-span-2">
