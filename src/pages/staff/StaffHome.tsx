@@ -30,7 +30,7 @@ const StaffHome = () => {
   // Stats: confirmed patients
   const { data: confirmedPatients } = useQuery({
     queryKey: ["dashboard-confirmed", serviceFilter],
-    enabled: !isLabTech,
+    enabled: !isLabTech && !isPharmacist,
     queryFn: async () => {
       let query = supabase
         .from("appointments")
@@ -57,7 +57,7 @@ const StaffHome = () => {
   // Stats: recent ordonnances
   const { data: recentOrdonnances } = useQuery({
     queryKey: ["dashboard-ordonnances"],
-    enabled: isMedicalStaff,
+    enabled: isMedicalStaff && !isPharmacist,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("ordonnances")
@@ -81,7 +81,7 @@ const StaffHome = () => {
   // Stats: recent lab results
   const { data: recentLabResults } = useQuery({
     queryKey: ["dashboard-lab-results"],
-    enabled: isMedicalStaff || isLabTech,
+    enabled: (isMedicalStaff || isLabTech) && !isPharmacist,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("lab_results")
@@ -139,7 +139,7 @@ const StaffHome = () => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Link to="/staff/patients">
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
               <CardContent className="pt-6">
@@ -155,7 +155,7 @@ const StaffHome = () => {
           </Link>
         )}
 
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Link to="/staff/ordonnances">
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
               <CardContent className="pt-6">
@@ -171,31 +171,35 @@ const StaffHome = () => {
           </Link>
         )}
 
-        <Link to="/staff/resultats">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
+        {!isPharmacist && (
+          <Link to="/staff/resultats">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Résultats labo</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.labResults ?? "—"}</p>
+                  </div>
+                  <FlaskConical className="h-10 w-10 text-primary opacity-80" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
+
+        {!isPharmacist && (
+          <Card className="border-amber-200 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-800">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Résultats labo</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.labResults ?? "—"}</p>
+                  <p className="text-sm text-muted-foreground">Analyses en attente</p>
+                  <p className="text-3xl font-bold text-foreground">{counts?.labPending ?? "—"}</p>
                 </div>
-                <FlaskConical className="h-10 w-10 text-primary opacity-80" />
+                <Clock className="h-10 w-10 text-amber-500 opacity-80" />
               </div>
             </CardContent>
           </Card>
-        </Link>
-
-        <Card className="border-amber-200 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Analyses en attente</p>
-                <p className="text-3xl font-bold text-foreground">{counts?.labPending ?? "—"}</p>
-              </div>
-              <Clock className="h-10 w-10 text-amber-500 opacity-80" />
-            </div>
-          </CardContent>
-        </Card>
+        )}
 
         {isPharmacist && (
           <Link to="/staff/pharmacie">
@@ -217,7 +221,7 @@ const StaffHome = () => {
       {/* Tables grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent confirmed patients */}
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base font-semibold">
@@ -258,7 +262,7 @@ const StaffHome = () => {
         )}
 
         {/* Recent ordonnances */}
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base font-semibold">Dernières ordonnances</CardTitle>
@@ -291,7 +295,7 @@ const StaffHome = () => {
           </Card>
         )}
 
-        {/* Recent lab results - full width */}
+        {!isPharmacist && (
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-base font-semibold">Derniers résultats de laboratoire</CardTitle>
@@ -342,6 +346,7 @@ const StaffHome = () => {
             )}
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   );

@@ -508,6 +508,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_email_by_display_name: {
+        Args: { _display_name: string }
+        Returns: string
+      }
       get_staff_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["staff_role"]

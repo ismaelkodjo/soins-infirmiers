@@ -35,7 +35,8 @@ const Auth = () => {
   const { user, loading: authLoading } = useAuth();
   const [profileType, setProfileType] = useState<ProfileType>("patient");
   const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // email or display name for login
+  const [signupEmail, setSignupEmail] = useState(""); // email for signup
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -51,14 +52,12 @@ const Auth = () => {
     if (authLoading || !user) return;
 
     const redirectUser = async () => {
-      // Check admin
       const { data: isAdmin } = await supabase.rpc("has_role" as any, {
         _user_id: user.id,
         _role: "admin",
       });
       if (isAdmin) { navigate("/admin", { replace: true }); return; }
 
-      // Check staff
       const { data: staff } = await supabase
         .from("staff_members")
         .select("approved")
@@ -67,7 +66,6 @@ const Auth = () => {
         .maybeSingle();
       if (staff) { navigate("/staff", { replace: true }); return; }
 
-      // Default: patient
       navigate("/espace-patient", { replace: true });
     };
 
@@ -80,8 +78,20 @@ const Auth = () => {
   );
   const allRulesValid = rulesStatus.every((r) => r.valid);
 
-  // Admin can't sign up — only login
   const canSignUp = profileType !== "admin";
+
+  const resolveEmail = async (input: string): Promise<string> => {
+    // If it looks like an email, return as-is
+    if (input.includes("@")) return input;
+    // Otherwise, look up by display name
+    const { data, error } = await supabase.rpc("get_email_by_display_name" as any, {
+      _display_name: input,
+    });
+    if (error || !data) {
+      throw new Error("Aucun compte trouvé avec ce nom. Vérifiez l'orthographe ou utilisez votre email.");
+    }
+    return data as string;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +99,7 @@ const Auth = () => {
 
     try {
       if (forgotPassword) {
+        const email = await resolveEmail(identifier);
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
@@ -96,6 +107,7 @@ const Auth = () => {
         toast.success("Email de réinitialisation envoyé !");
         setForgotPassword(false);
       } else if (isLogin) {
+        const email = await resolveEmail(identifier);
         const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
 
@@ -147,7 +159,7 @@ const Auth = () => {
         }
 
         const { data: authData, error } = await supabase.auth.signUp({
-          email,
+          email: signupEmail,
           password,
           options: {
             data: { display_name: displayName },
@@ -274,21 +286,46 @@ const Auth = () => {
             </div>
           )}
 
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="jean@exemple.fr"
-              />
+          {/* Identifier field: email or name for login / forgot password */}
+          {(isLogin || forgotPassword) && (
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">
+                {forgotPassword ? "Email ou nom" : "Email ou nom complet"}
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  required
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="jean@exemple.fr ou Jean Dupont"
+                />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                Entrez votre email ou votre nom complet tel qu'inscrit lors de la création du compte
+              </p>
             </div>
-          </div>
+          )}
+
+          {/* Email — signup only */}
+          {!isLogin && !forgotPassword && canSignUp && (
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block">Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="email"
+                  required
+                  value={signupEmail}
+                  onChange={(e) => setSignupEmail(e.target.value)}
+                  className="w-full border border-input rounded-lg pl-10 pr-4 py-2.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder="jean@exemple.fr"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Password */}
           {!forgotPassword && (

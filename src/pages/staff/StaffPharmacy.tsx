@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Pill, FlaskConical, Clock, CheckCircle, CreditCard, Users, Package, AlertTriangle } from "lucide-react";
+import { Pill, FlaskConical, Clock, CheckCircle, CreditCard, Users, Package, AlertTriangle, TrendingUp, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 
 const StaffPharmacy = () => {
@@ -80,6 +80,43 @@ const StaffPharmacy = () => {
     },
   });
 
+  // Fetch daily sales (dispensed today)
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const { data: dailySales, isLoading: loadingSales } = useQuery({
+    queryKey: ["pharmacy-daily-sales", selectedDate],
+    queryFn: async () => {
+      const startOfDay = `${selectedDate}T00:00:00`;
+      const endOfDay = `${selectedDate}T23:59:59`;
+      const { data, error } = await supabase
+        .from("pharmacy_queue")
+        .select("*")
+        .eq("status", "dispensé")
+        .gte("updated_at", startOfDay)
+        .lte("updated_at", endOfDay)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+
+      // Fetch pharmacy_items for price lookup
+      const { data: items } = await supabase
+        .from("pharmacy_items")
+        .select("name, price");
+      const priceMap = new Map(items?.map((i) => [i.name.toLowerCase(), i.price]) || []);
+
+      let totalMed = 0;
+      let totalLab = 0;
+      const salesWithPrices = (data || []).map((sale) => {
+        const saleTotal = (sale.items || []).reduce((sum: number, itemName: string) => {
+          const price = priceMap.get(itemName.toLowerCase()) || 0;
+          return sum + Number(price);
+        }, 0);
+        if (sale.source_type === "ordonnance") totalMed += saleTotal;
+        else totalLab += saleTotal;
+        return { ...sale, total: saleTotal };
+      });
+
+      return { sales: salesWithPrices, totalMed, totalLab, grandTotal: totalMed + totalLab };
+    },
+  });
   // Dispense mutation (mark as paid & dispensed)
   const dispenseMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -269,6 +306,9 @@ const StaffPharmacy = () => {
           <TabsTrigger value="inventaire" className="gap-1.5">
             <Package className="h-4 w-4" /> Inventaire
           </TabsTrigger>
+          <TabsTrigger value="ventes" className="gap-1.5">
+            <TrendingUp className="h-4 w-4" /> Ventes
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="medicaments" className="mt-4">
@@ -346,6 +386,76 @@ const StaffPharmacy = () => {
                             </Badge>
                           )}
                         </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="ventes" className="mt-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Ventes du jour</CardTitle>
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="border border-input rounded-lg px-3 py-1.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="rounded-lg border border-border bg-accent/30 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Médicaments</p>
+                  <p className="text-2xl font-bold text-foreground">{(dailySales?.totalMed ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+                <div className="rounded-lg border border-border bg-accent/30 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Analyses</p>
+                  <p className="text-2xl font-bold text-foreground">{(dailySales?.totalLab ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Total du jour</p>
+                  <p className="text-2xl font-bold text-primary">{(dailySales?.grandTotal ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+              </div>
+
+              {loadingSales ? (
+                <p className="text-sm text-muted-foreground animate-pulse text-center py-8">Chargement...</p>
+              ) : !dailySales?.sales?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-8">Aucune vente pour cette date</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Patient</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Articles</TableHead>
+                      <TableHead className="text-right">Montant</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {dailySales.sales.map((sale) => (
+                      <TableRow key={sale.id}>
+                        <TableCell className="font-medium">{sale.patient_name || "Patient"}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="text-xs">
+                            {sale.source_type === "ordonnance" ? "Médicament" : "Analyse"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {sale.items?.map((i: string, idx: number) => (
+                              <Badge key={idx} variant="outline" className="text-xs">{i}</Badge>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right font-medium">{sale.total.toLocaleString("fr-FR")} FCFA</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
