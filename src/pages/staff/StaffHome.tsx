@@ -221,7 +221,7 @@ const StaffHome = () => {
       {/* Tables grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent confirmed patients */}
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base font-semibold">
