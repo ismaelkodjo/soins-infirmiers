@@ -139,7 +139,7 @@ const StaffHome = () => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Link to="/staff/patients">
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
               <CardContent className="pt-6">
