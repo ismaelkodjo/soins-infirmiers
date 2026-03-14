@@ -57,7 +57,7 @@ const StaffHome = () => {
   // Stats: recent ordonnances
   const { data: recentOrdonnances } = useQuery({
     queryKey: ["dashboard-ordonnances"],
-    enabled: isMedicalStaff || isLabTech,
+    enabled: isMedicalStaff,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("ordonnances")
