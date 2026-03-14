@@ -262,7 +262,7 @@ const StaffHome = () => {
         )}
 
         {/* Recent ordonnances */}
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-base font-semibold">Dernières ordonnances</CardTitle>
