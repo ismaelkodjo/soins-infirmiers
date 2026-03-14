@@ -80,6 +80,43 @@ const StaffPharmacy = () => {
     },
   });
 
+  // Fetch daily sales (dispensed today)
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const { data: dailySales, isLoading: loadingSales } = useQuery({
+    queryKey: ["pharmacy-daily-sales", selectedDate],
+    queryFn: async () => {
+      const startOfDay = `${selectedDate}T00:00:00`;
+      const endOfDay = `${selectedDate}T23:59:59`;
+      const { data, error } = await supabase
+        .from("pharmacy_queue")
+        .select("*")
+        .eq("status", "dispensé")
+        .gte("updated_at", startOfDay)
+        .lte("updated_at", endOfDay)
+        .order("updated_at", { ascending: false });
+      if (error) throw error;
+
+      // Fetch pharmacy_items for price lookup
+      const { data: items } = await supabase
+        .from("pharmacy_items")
+        .select("name, price");
+      const priceMap = new Map(items?.map((i) => [i.name.toLowerCase(), i.price]) || []);
+
+      let totalMed = 0;
+      let totalLab = 0;
+      const salesWithPrices = (data || []).map((sale) => {
+        const saleTotal = (sale.items || []).reduce((sum: number, itemName: string) => {
+          const price = priceMap.get(itemName.toLowerCase()) || 0;
+          return sum + Number(price);
+        }, 0);
+        if (sale.source_type === "ordonnance") totalMed += saleTotal;
+        else totalLab += saleTotal;
+        return { ...sale, total: saleTotal };
+      });
+
+      return { sales: salesWithPrices, totalMed, totalLab, grandTotal: totalMed + totalLab };
+    },
+  });
   // Dispense mutation (mark as paid & dispensed)
   const dispenseMutation = useMutation({
     mutationFn: async (id: string) => {
