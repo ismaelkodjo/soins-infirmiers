@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useStaffRole, ROLE_LABELS } from "@/hooks/useStaffRole";
 import { Home, FileText, Calendar, FlaskConical, LogOut, Stethoscope, Users, Pill, Menu, X, ArrowLeft } from "lucide-react";
 import LogoutConfirmDialog from "@/components/LogoutConfirmDialog";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const StaffDashboard = () => {
