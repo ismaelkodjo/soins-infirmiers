@@ -30,6 +30,7 @@ const StaffHome = () => {
   // Stats: confirmed patients
   const { data: confirmedPatients } = useQuery({
     queryKey: ["dashboard-confirmed", serviceFilter],
+    enabled: !isLabTech,
     queryFn: async () => {
       let query = supabase
         .from("appointments")
