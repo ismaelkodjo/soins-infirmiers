@@ -346,6 +346,7 @@ const StaffHome = () => {
             )}
           </CardContent>
         </Card>
+        )}
       </div>
     </div>
   );
