@@ -394,6 +394,76 @@ const StaffPharmacy = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <TabsContent value="ventes" className="mt-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-base">Ventes du jour</CardTitle>
+              <div className="flex items-center gap-2">
+                <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                  className="border border-input rounded-lg px-3 py-1.5 text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <div className="rounded-lg border border-border bg-accent/30 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Médicaments</p>
+                  <p className="text-2xl font-bold text-foreground">{(dailySales?.totalMed ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+                <div className="rounded-lg border border-border bg-accent/30 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Analyses</p>
+                  <p className="text-2xl font-bold text-foreground">{(dailySales?.totalLab ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+                <div className="rounded-lg border border-primary/20 bg-primary/5 p-4 text-center">
+                  <p className="text-xs text-muted-foreground mb-1">Total du jour</p>
+                  <p className="text-2xl font-bold text-primary">{(dailySales?.grandTotal ?? 0).toLocaleString("fr-FR")} FCFA</p>
+                </div>
+              </div>
+
+              {loadingSales ? (
+                <p className="text-sm text-muted-foreground animate-pulse text-center py-8">Chargement...</p>
+              ) : !dailySales?.sales?.length ? (
+                <p className="text-sm text-muted-foreground text-center py-8">Aucune vente pour cette date</p>
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Patient</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Articles</TableHead>
+                      <TableHead className="text-right">Montant</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {dailySales.sales.map((sale) => (
+                      <TableRow key={sale.id}>
+                        <TableCell className="font-medium">{sale.patient_name || "Patient"}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="text-xs">
+                            {sale.source_type === "ordonnance" ? "Médicament" : "Analyse"}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {sale.items?.map((i: string, idx: number) => (
+                              <Badge key={idx} variant="outline" className="text-xs">{i}</Badge>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right font-medium">{sale.total.toLocaleString("fr-FR")} FCFA</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
       </Tabs>
     </div>
   );
