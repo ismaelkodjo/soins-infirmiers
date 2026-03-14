@@ -171,31 +171,35 @@ const StaffHome = () => {
           </Link>
         )}
 
-        <Link to="/staff/resultats">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
+        {!isPharmacist && (
+          <Link to="/staff/resultats">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Résultats labo</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.labResults ?? "—"}</p>
+                  </div>
+                  <FlaskConical className="h-10 w-10 text-primary opacity-80" />
+                </div>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
+
+        {!isPharmacist && (
+          <Card className="border-amber-200 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-800">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Résultats labo</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.labResults ?? "—"}</p>
+                  <p className="text-sm text-muted-foreground">Analyses en attente</p>
+                  <p className="text-3xl font-bold text-foreground">{counts?.labPending ?? "—"}</p>
                 </div>
-                <FlaskConical className="h-10 w-10 text-primary opacity-80" />
+                <Clock className="h-10 w-10 text-amber-500 opacity-80" />
               </div>
             </CardContent>
           </Card>
-        </Link>
-
-        <Card className="border-amber-200 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-800">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Analyses en attente</p>
-                <p className="text-3xl font-bold text-foreground">{counts?.labPending ?? "—"}</p>
-              </div>
-              <Clock className="h-10 w-10 text-amber-500 opacity-80" />
-            </div>
-          </CardContent>
-        </Card>
+        )}
 
         {isPharmacist && (
           <Link to="/staff/pharmacie">
