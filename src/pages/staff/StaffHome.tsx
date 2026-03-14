@@ -139,19 +139,21 @@ const StaffHome = () => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Link to="/staff/patients">
-          <Card className="hover:shadow-card transition-shadow cursor-pointer">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">Patients confirmés</p>
-                  <p className="text-3xl font-bold text-foreground">{counts?.patients ?? "—"}</p>
+        {!isLabTech && (
+          <Link to="/staff/patients">
+            <Card className="hover:shadow-card transition-shadow cursor-pointer">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Patients confirmés</p>
+                    <p className="text-3xl font-bold text-foreground">{counts?.patients ?? "—"}</p>
+                  </div>
+                  <Users className="h-10 w-10 text-primary opacity-80" />
                 </div>
-                <Users className="h-10 w-10 text-primary opacity-80" />
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
+              </CardContent>
+            </Card>
+          </Link>
+        )}
 
         <Link to="/staff/ordonnances">
           <Card className="hover:shadow-card transition-shadow cursor-pointer">
