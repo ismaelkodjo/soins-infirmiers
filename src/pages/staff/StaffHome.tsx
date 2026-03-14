@@ -155,7 +155,7 @@ const StaffHome = () => {
           </Link>
         )}
 
-        {!isLabTech && (
+        {!isLabTech && !isPharmacist && (
           <Link to="/staff/ordonnances">
             <Card className="hover:shadow-card transition-shadow cursor-pointer">
               <CardContent className="pt-6">

@@ -34,8 +34,8 @@ const profileTypes: { value: ProfileType; label: string; icon: typeof UserRound;
 const Auth = () => {
   const { user, loading: authLoading } = useAuth();
   const [profileType, setProfileType] = useState<ProfileType>("patient");
-  const [isLogin, setIsLogin] = useState(true);
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
